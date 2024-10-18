@@ -195,8 +195,8 @@ watch(searchTerm, () => {
         
         <!-- Mostrar un mensaje si no hay jugadores -->
         <TableRow v-if="paginatedPlayers.length === 0">
-          <TableCell colspan="4" class="text-center py-4">
-            No se encontraron jugadores.
+          <TableCell colspan="8" class="text-center text-slate-400 py-6">
+            No se encontraron jugadores
           </TableCell>
         </TableRow>
       </TableBody>
