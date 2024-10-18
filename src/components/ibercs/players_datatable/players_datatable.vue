@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue'
 import { PropType } from 'vue'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import Button from '@/components/ui/button/Button.vue'
+import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Icon } from '@iconify/vue'
 import { PlayerModel } from '@/entities/players'
@@ -24,7 +25,7 @@ const searchTerm = ref('')
 
 // Estado para controlar la ordenación
 const sortBy = ref<keyof PlayerModel['Stats'] | 'Nickname'>('Elo') // columna por defecto
-const sortOrder = ref<'asc' | 'desc'>('asc') // orden por defecto
+const sortOrder = ref<'asc' | 'desc'>('desc') // orden por defecto
 
 // Computed property para filtrar y ordenar los jugadores
 const filteredPlayers = computed(() => {
@@ -95,7 +96,7 @@ watch(searchTerm, () => {
 
 <template>
   <section class="w-full">
-    <span class="p-2 text-lg font-semibold">Estadísticas jugadores</span>
+    <span class="p-2 text-lg font-semibold">Estadísticas de jugadores</span>
 
     <!-- Campo de búsqueda -->
     <div class="flex px-2 mt-2 gap-2 items-center">
@@ -108,7 +109,7 @@ watch(searchTerm, () => {
     <Table class="min-w-full rounded-md overflow-hidden">
       <!-- Cabecera de la tabla -->
       <TableHeader>
-        <TableRow>
+        <TableRow class="w-full">
           <!-- Ordenar por Elo -->
           <TableHead class="cursor-pointer" @click="changeSort('Elo')">
             <div class="flex items-center gap-1">
@@ -117,26 +118,58 @@ watch(searchTerm, () => {
             </div>
           </TableHead>
 
-          <!-- Ordenar por Nickname -->
+          <!-- Header Nickname -->
           <TableHead class="cursor-pointer">
-            <div class="flex items-center gap-1">
+            <div class="flex items-center gap-1 justify-center">
               Nickname
             </div>
           </TableHead>
 
           <!-- Ordenar por KR Ratio -->
           <TableHead class="cursor-pointer" @click="changeSort('KrRatio')">
-            <div class="flex items-center gap-1">
+            <div class="flex items-center gap-1 justify-center">
               KR Ratio
               <Icon :icon="sortBy === 'KrRatio' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[1.2rem] w-[1.2rem]" />
             </div>
           </TableHead>
 
           <!-- Ordenar por KD Ratio -->
-          <TableHead class="cursor-pointer text-right" @click="changeSort('KdRatio')">
-            <div class="flex items-center gap-1 justify-end">
+          <TableHead class="cursor-pointer" @click="changeSort('KdRatio')">
+            <div class="flex items-center gap-1 justify-center">
               KD Ratio
               <Icon :icon="sortBy === 'KdRatio' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[1.2rem] w-[1.2rem]" />
+            </div>
+          </TableHead>
+
+          <!-- Ordenar por Hs -->
+          <TableHead class="cursor-pointer" @click="changeSort('HeadshotPercentAverage')">
+            <div class="flex items-center gap-1 justify-center">
+              % Headshots
+              <Icon :icon="sortBy === 'HeadshotPercentAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[1.2rem] w-[1.2rem]" />
+            </div>
+          </TableHead>
+
+          <!-- Ordenar por Kills -->
+          <TableHead class="cursor-pointer" @click="changeSort('KillsAverage')">
+            <div class="flex items-center gap-1 justify-center">
+              Kills (Avg)
+              <Icon :icon="sortBy === 'KillsAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[1.2rem] w-[1.2rem]" />
+            </div>
+          </TableHead>
+
+          <!-- Ordenar por Deaths -->
+          <TableHead class="cursor-pointer" @click="changeSort('DeathsAverage')">
+            <div class="flex items-center gap-1 justify-center">
+              Deaths (Avg)
+              <Icon :icon="sortBy === 'DeathsAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[1.2rem] w-[1.2rem]" />
+            </div>
+          </TableHead>
+
+          <!-- Ordenar por Deaths -->
+          <TableHead class="cursor-pointer" @click="changeSort('MVPAverage')">
+            <div class="flex items-center gap-1 justify-right">
+              MVP (Avg)
+              <Icon :icon="sortBy === 'MVPAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[1.2rem] w-[1.2rem]" />
             </div>
           </TableHead>
         </TableRow>
@@ -144,12 +177,22 @@ watch(searchTerm, () => {
 
       <!-- Cuerpo de la tabla -->
       <TableBody>
-        <TableRow v-for="player in paginatedPlayers" :key="player.Id">
-          <TableCell>{{ player.Stats.Elo }}</TableCell>
-          <TableCell>{{ player.Nickname }}</TableCell>
-          <TableCell>{{ player.Stats.KrRatio }}</TableCell>
-          <TableCell class="text-right">{{ player.Stats.KdRatio }}</TableCell>
-        </TableRow>
+      
+          <TableRow v-for="player in paginatedPlayers" :key="player.Id">
+            <TableCell class="text-left"><Badge variant="secondary">{{ player.Stats.Elo }}</Badge></TableCell>
+            <TableCell class="text-center hover:text-orange-500 transition">
+              <a :href="`https://www.faceit.com/es/players/${player.Nickname}`" target="_blank" rel="noopener noreferrer">
+                {{ player.Nickname }}
+              </a>
+            </TableCell>
+            <TableCell class="text-center">{{ player.Stats.KrRatio }}</TableCell>
+            <TableCell class="text-center">{{ player.Stats.KdRatio }}</TableCell>
+            <TableCell class="text-center">{{ player.Stats.HeadshotPercentAverage }}</TableCell>
+            <TableCell class="text-center">{{ player.Stats.KillsAverage }}</TableCell>
+            <TableCell class="text-center">{{ player.Stats.DeathsAverage }}</TableCell>
+            <TableCell class="text-center">{{ player.Stats.MVPAverage }}</TableCell>
+          </TableRow>
+        
         <!-- Mostrar un mensaje si no hay jugadores -->
         <TableRow v-if="paginatedPlayers.length === 0">
           <TableCell colspan="4" class="text-center py-4">
@@ -159,15 +202,21 @@ watch(searchTerm, () => {
       </TableBody>
     </Table>
 
-    <!-- Controles de paginación -->
-    <div class="flex justify-end gap-4 items-center mt-4">
-      <Button @click="prevPage" variant="outline" :disabled="currentPage === 1">
-        <Icon icon="radix-icons:arrow-left" class="h-[1.2rem] w-[1.2rem]" />
-      </Button>
-      <span class="text-sm">{{ currentPage }} / {{ totalPages }}</span>
-      <Button @click="nextPage" variant="outline" :disabled="currentPage === totalPages">
-        <Icon icon="radix-icons:arrow-right" class="h-[1.2rem] w-[1.2rem]" />
-      </Button>
+    <div class="flex justify-between">
+      <div class="flex flex-col justify-end px-2">
+        <span class="text-xs text-slate-600 mb-2">(Últimas 12 partidas)</span>
+        <span class="text-sm text-slate-600">{{ players.length }} jugadores encontrados</span>
+      </div>
+      <!-- Controles de paginación -->
+      <div class="flex justify-end gap-4 items-center mt-4">
+        <Button @click="prevPage" variant="outline" :disabled="currentPage === 1">
+          <Icon icon="radix-icons:arrow-left" class="h-[1.2rem] w-[1.2rem]" />
+        </Button>
+        <span class="text-sm">{{ currentPage }} / {{ totalPages }}</span>
+        <Button @click="nextPage" variant="outline" :disabled="currentPage === totalPages">
+          <Icon icon="radix-icons:arrow-right" class="h-[1.2rem] w-[1.2rem]" />
+        </Button>
+      </div>
     </div>
   </section>
 </template>

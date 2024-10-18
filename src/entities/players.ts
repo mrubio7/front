@@ -5,7 +5,7 @@ export interface PlayerStatsModel {
 	KillsAverage: number;
 	DeathsAverage: number;
 	HeadshotPercentAverage: number;
-	MvpAverage: number;
+	MVPAverage: number;
 	AssistAverage: number;
 	TripleKillsAverage: number;
 	QuadroKillsAverage: number;

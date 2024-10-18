@@ -4,7 +4,7 @@ import { basic_get } from "@/libs/fetchs"
 const getHost = (): string => {
     const host = import.meta.env.VITE_BACKEND_HOST
     //return host || "https://localhost:8080/api/v1"
-    return "https://api-gateway-1047491143983.europe-southwest1.run.app"
+    return "https://api-gateway-1047491143983.europe-southwest1.run.app/api/v1"
 }
 
 
@@ -12,7 +12,8 @@ export const ApiBackend = {
     Players: {
         GetAll: async () => {
             const endpoint = `${getHost()}/players/get-all`;
-            return await basic_get(endpoint) as PlayerModel[]
+            const res = await basic_get(endpoint)
+            return res.data.players as PlayerModel[]
         }
     }
 }
