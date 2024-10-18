@@ -114,7 +114,7 @@ watch(searchTerm, () => {
           <TableHead class="cursor-pointer" @click="changeSort('Elo')">
             <div class="flex items-center gap-1">
               Elo
-              <Icon :icon="sortBy === 'Elo' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[1.2rem] w-[1.2rem]" />
+              <Icon :icon="sortBy === 'Elo' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
             </div>
           </TableHead>
 
@@ -129,7 +129,7 @@ watch(searchTerm, () => {
           <TableHead class="cursor-pointer" @click="changeSort('KrRatio')">
             <div class="flex items-center gap-1 justify-center">
               KR Ratio
-              <Icon :icon="sortBy === 'KrRatio' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[1.2rem] w-[1.2rem]" />
+              <Icon :icon="sortBy === 'KrRatio' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
             </div>
           </TableHead>
 
@@ -137,7 +137,7 @@ watch(searchTerm, () => {
           <TableHead class="cursor-pointer" @click="changeSort('KdRatio')">
             <div class="flex items-center gap-1 justify-center">
               KD Ratio
-              <Icon :icon="sortBy === 'KdRatio' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[1.2rem] w-[1.2rem]" />
+              <Icon :icon="sortBy === 'KdRatio' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
             </div>
           </TableHead>
 
@@ -145,7 +145,7 @@ watch(searchTerm, () => {
           <TableHead class="cursor-pointer" @click="changeSort('HeadshotPercentAverage')">
             <div class="flex items-center gap-1 justify-center">
               % Headshots
-              <Icon :icon="sortBy === 'HeadshotPercentAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[1.2rem] w-[1.2rem]" />
+              <Icon :icon="sortBy === 'HeadshotPercentAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
             </div>
           </TableHead>
 
@@ -153,7 +153,7 @@ watch(searchTerm, () => {
           <TableHead class="cursor-pointer" @click="changeSort('KillsAverage')">
             <div class="flex items-center gap-1 justify-center">
               Kills (Avg)
-              <Icon :icon="sortBy === 'KillsAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[1.2rem] w-[1.2rem]" />
+              <Icon :icon="sortBy === 'KillsAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
             </div>
           </TableHead>
 
@@ -161,7 +161,7 @@ watch(searchTerm, () => {
           <TableHead class="cursor-pointer" @click="changeSort('DeathsAverage')">
             <div class="flex items-center gap-1 justify-center">
               Deaths (Avg)
-              <Icon :icon="sortBy === 'DeathsAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[1.2rem] w-[1.2rem]" />
+              <Icon :icon="sortBy === 'DeathsAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
             </div>
           </TableHead>
 
@@ -169,7 +169,7 @@ watch(searchTerm, () => {
           <TableHead class="cursor-pointer" @click="changeSort('MVPAverage')">
             <div class="flex items-center gap-1 justify-right">
               MVP (Avg)
-              <Icon :icon="sortBy === 'MVPAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[1.2rem] w-[1.2rem]" />
+              <Icon :icon="sortBy === 'MVPAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
             </div>
           </TableHead>
         </TableRow>
