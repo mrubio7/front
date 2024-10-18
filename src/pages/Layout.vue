@@ -8,6 +8,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useColorMode } from '@vueuse/core'
 import { Icon } from '@iconify/vue'
+import { PathRoutes } from '@/router';
 
 
 const mode = useColorMode()
@@ -20,9 +21,20 @@ const mode = useColorMode()
             <NavigationMenu class="w-full max-w-none px-6 pt-2 pb-1 border-b">
                 <NavigationMenuList>
                     <div class="flex justify-between">
-                        <NavigationMenuItem :class="navigationMenuTriggerStyle()" class="cursor-pointer">
-                            IBERCS
-                        </NavigationMenuItem>
+                        <div class="flex items-center gap-4">
+                            <RouterLink :to="PathRoutes.Home">
+                                <NavigationMenuItem :class="navigationMenuTriggerStyle()" class="cursor-pointer">
+                                    <div>
+                                        <img src="/public/logo.png" width="30"/>
+                                    </div>
+                                </NavigationMenuItem>
+                            </RouterLink>
+                            <!-- <RouterLink :to="PathRoutes.Home">
+                                <NavigationMenuItem :class="navigationMenuTriggerStyle()" class="cursor-pointer">
+                                    Estadisticas
+                                </NavigationMenuItem>
+                            </RouterLink> -->
+                        </div>
                         <NavigationMenuItem>
                             <div v-if="mode == 'light'">
                                 <Button variant="outline" size="icon" @click="mode = 'dark'">
@@ -43,28 +55,32 @@ const mode = useColorMode()
         <!-- Contenido principal con 3 columnas -->
         <div class="flex-grow flex">
             <!-- Sección izquierda -->
-            <div class="w-1/6 p-4">
+            <div class="w-1/6 p-4 lg:block hidden">
                 
             </div>
 
             <!-- Sección central -->
-            <div class="w-4/6 p-4">
+            <div class="lg:w-4/6 p-4 w-full">
                 <div class="border rounded-md p-2">
                     <RouterView />
                 </div>
             </div>
 
             <!-- Sección derecha -->
-            <div class="w-1/6 p-4">
+            <div class="w-1/6 p-4 lg:block hidden">
                 
             </div>
         </div>
 
         <!-- Footer siempre abajo -->
         <footer class="border-t">
-            <div class="p-1 flex justify-between px-4">
-                <span class="text-sm"></span>
-                <span class="text-sm">Made with ❤︎</span>
+            <div class="p-1 flex justify-between px-4 h-full">
+                <div class="text-sm">
+                    <img src="/public/logo.png" width="80" class=""/>
+                </div>
+                <div class="h-20 flex items-end">
+                    <span class="text-sm">Made with ❤︎</span>
+                </div>
             </div>
         </footer>
     </section>
