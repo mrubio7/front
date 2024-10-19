@@ -2,6 +2,7 @@
 import { ref, computed, watch } from 'vue'
 import { PropType } from 'vue'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Button from '@/components/ui/button/Button.vue'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
@@ -18,7 +19,7 @@ const props = defineProps({
 
 // Estado para controlar la página actual y el tamaño de la página
 const currentPage = ref(1)
-const pageSize = ref(15) // Número de jugadores por página
+const pageSize = ref(10) // Número de jugadores por página
 
 // Estado para el término de búsqueda
 const searchTerm = ref('')
@@ -118,9 +119,16 @@ watch(searchTerm, () => {
             </div>
           </TableHead>
 
+          <!-- Header Avatar -->
+          <TableHead class="cursor-pointer w-10">
+            <div class="flex items-center gap-1 justify-center">
+              
+            </div>
+          </TableHead>
+
           <!-- Header Nickname -->
           <TableHead class="cursor-pointer">
-            <div class="flex items-center gap-1 justify-center">
+            <div class="flex items-center gap-1 justify-left">
               Nickname
             </div>
           </TableHead>
@@ -180,7 +188,14 @@ watch(searchTerm, () => {
       
           <TableRow v-for="player in paginatedPlayers" :key="player.Id">
             <TableCell class="text-left"><Badge variant="secondary">{{ player.Stats.Elo }}</Badge></TableCell>
-            <TableCell class="text-center hover:text-orange-500 transition">
+            <TableCell class="text-right">
+              <a :href="`https://www.faceit.com/es/players/${player.Nickname}`" target="_blank" rel="noopener noreferrer">
+                <Avatar class="w-8 h-8">
+                  <AvatarImage :src="player.Avatar" alt="@radix-vue" />
+                </Avatar>
+              </a>
+            </TableCell>
+            <TableCell class="text-left hover:text-orange-500 transition">
               <a :href="`https://www.faceit.com/es/players/${player.Nickname}`" target="_blank" rel="noopener noreferrer">
                 {{ player.Nickname }}
               </a>

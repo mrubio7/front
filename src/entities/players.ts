@@ -15,6 +15,7 @@ export interface PlayerStatsModel {
 
 export interface PlayerModel {
 	Id: number;
+	Avatar: string;
 	Nickname: string;
 	FaceitId: string;
 	SteamId?: string | null;
