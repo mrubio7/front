@@ -19,7 +19,7 @@ const props = defineProps({
 
 // Estado para controlar la página actual y el tamaño de la página
 const currentPage = ref(1)
-const pageSize = ref(10) // Número de jugadores por página
+const pageSize = ref(12) // Número de jugadores por página
 
 // Estado para el término de búsqueda
 const searchTerm = ref('')
@@ -190,7 +190,7 @@ watch(searchTerm, () => {
             <TableCell class="text-left"><Badge variant="secondary">{{ player.Stats.Elo }}</Badge></TableCell>
             <TableCell class="text-right">
               <a :href="`https://www.faceit.com/es/players/${player.Nickname}`" target="_blank" rel="noopener noreferrer">
-                <Avatar class="w-8 h-8">
+                <Avatar class="w-7 h-7 flex">
                   <AvatarImage :src="player.Avatar" alt="@radix-vue" />
                 </Avatar>
               </a>

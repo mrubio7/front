@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu'
+import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu'
 import { Button } from '@/components/ui/button';
 import { useColorMode } from '@vueuse/core'
 import { Icon } from '@iconify/vue'
 import { PathRoutes } from '@/router';
 import Prominent_players from '@/components/ibercs/cards/prominent_players.vue';
-
+import { ApiBackend } from '@/api/api_backend';
+import { onMounted, ref } from 'vue';
+import { ProminentPlayer } from '@/entities/players';
 
 const mode = useColorMode()
+
+const prominentPlayers = ref([] as ProminentPlayer[]);
+
+onMounted(async () => {
+    prominentPlayers.value = await ApiBackend.Players.GetProminentPlayers();
+});
 </script>
 
 <template>
@@ -30,11 +33,11 @@ const mode = useColorMode()
                                     </div>
                                 </NavigationMenuItem>
                             </RouterLink>
-                            <!-- <RouterLink :to="PathRoutes.Home">
+                            <RouterLink :to="PathRoutes.Ladder_Players">
                                 <NavigationMenuItem :class="navigationMenuTriggerStyle()" class="cursor-pointer">
                                     Estadisticas
                                 </NavigationMenuItem>
-                            </RouterLink> -->
+                            </RouterLink>
                         </div>
                         <NavigationMenuItem>
                             <div v-if="mode == 'light'">
@@ -57,7 +60,7 @@ const mode = useColorMode()
         <div class="flex-grow flex">
             <!-- Sección izquierda -->
             <div class="w-1/6 py-4 px-6 lg:block hidden">
-                <Prominent_players />
+                <Prominent_players :players="prominentPlayers" />
             </div>
 
             <!-- Sección central -->

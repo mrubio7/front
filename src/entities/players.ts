@@ -21,3 +21,12 @@ export interface PlayerModel {
 	SteamId?: string | null;
 	Stats: PlayerStatsModel;
 }
+
+export interface ProminentPlayer {
+	Id: number;
+	Score: number;
+	Avatar: string;
+	Nickname: string;
+	FaceitId: string;
+	SteamId: string;
+}

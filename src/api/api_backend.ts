@@ -1,4 +1,4 @@
-import { PlayerModel } from "@/entities/players"
+import { PlayerModel, ProminentPlayer } from "@/entities/players"
 import { basic_get } from "@/libs/fetchs"
 
 const getHost = (): string => {
@@ -15,6 +15,12 @@ export const ApiBackend = {
             const endpoint = `${getHost()}/players/get-all`;
             const res = await basic_get(endpoint)
             return res.data.players as PlayerModel[]
+        },
+        GetProminentPlayers: async () => {
+            const endpoint = `${getHost()}/players/get-prominent-players`;
+            const res = await basic_get(endpoint)
+            console.log(res)
+            return res.data.players as ProminentPlayer[]
         }
     }
 }

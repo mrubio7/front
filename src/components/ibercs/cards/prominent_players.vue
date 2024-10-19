@@ -5,72 +5,28 @@ import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Icon } from '@iconify/vue'
+import { ProminentPlayer } from '@/entities/players'
+import { PropType, watchEffect } from 'vue'
 
-const players = [
-  {
-    Id: 1,
-    Avatar: "https://distribution.faceit-cdn.net/images/c0f00f04-d65e-444a-b447-815b539b781e.jpeg",
-    Nickname: 'vanityy1',
-    Stats: {
-      KrRatio: 1.2,
-      KdRatio: 1.5,
-      Elo: 1500,
-    },
-  },
-  {
-    Id: 2,
-    Avatar: "https://assets.faceit-cdn.net/avatars/e326eb2d-4e3e-4ebe-a34d-4a07def33893_1607003196272.jpg",
-    Nickname: 'BrodAsS',
-    Stats: {
-      KrRatio: 0.9,
-      KdRatio: 1.0,
-      Elo: 1400,
-    },
-  },
-  {
-    Id: 3,
-    Avatar: "https://assets.faceit-cdn.net/avatars/6edb1ba0-7c0d-4480-a68f-45f476a21626_1550488534287.png",
-    Nickname: 'chakaL',
-    Stats: {
-      KrRatio: 1.8,
-      KdRatio: 1.7,
-      Elo: 1600,
-    },
-  },
-  {
-    Id: 4,
-    Avatar: "https://distribution.faceit-cdn.net/images/b9c993e0-b148-43d9-a98e-6d29b76fc9b7.jpeg",
-    Nickname: 'MOOGU',
-    Stats: {
-      KrRatio: 1.8,
-      KdRatio: 1.7,
-      Elo: 1600,
-    },
-  },
-  {
-    Id: 5,
-    Avatar: "https://distribution.faceit-cdn.net/images/a262055f-792b-44c1-b5fa-f9c810045df9.jpeg",
-    Nickname: 'Melgot',
-    Stats: {
-      KrRatio: 1.8,
-      KdRatio: 1.7,
-      Elo: 1600,
-    },
+const props = defineProps({
+  players: {
+    type: Array as PropType<ProminentPlayer[]>,
+    required: true
   }
-]
+})
 
-const getColorPosition = (n:number) => {
-    switch (n) {
+const getColorBorder = (n:number) => {
+    switch (n+1) {
         case 1:
-            return "bg-yellow-600";
+            return "border-2 border-yellow-500 shadow-md shadow-yellow-800";
         case 2:
-            return "bg-slate-600";
+            return "border-2 border-neutral-400 shadow-md shadow-neutral-600";
         case 3:
-            return "bg-yellow-900";
+            return "border-2 border-yellow-800 shadow-md shadow-yellow-900";
         case 4:
-            return "";
+            return "border-2 border-slate-700";
         case 5:
-            return "";
+            return "border-2 border-slate-700";
     }
 }
 </script>
@@ -95,13 +51,10 @@ const getColorPosition = (n:number) => {
     <CardContent class="-mt-2">
         <Table class="rounded-md overflow-hidden">
             <TableBody>
-                <TableRow v-for="(player, n) in players" :key="player.Id">
-                    <TableCell class="w-[10%]">
-                        <Badge variant="secondary" :class="getColorPosition(n+1)">{{ n+1 }}</Badge>
-                    </TableCell>
+                <TableRow v-for="(player, n) in props.players" :key="player.Id">
                     <TableCell class="w-[15%]">
-                        <Avatar class="h-[25px] w-[25px] flex">
-                            <AvatarImage :src="player.Avatar" alt="Avatar" />
+                        <Avatar class="h-[25px] w-[25px] flex" :class="getColorBorder(n)">
+                            <AvatarImage :src="player.Avatar ? player.Avatar : './user_unknown.jpg'" alt="Avatar" />
                         </Avatar>
                     </TableCell>
                     <TableCell class="text-left">
