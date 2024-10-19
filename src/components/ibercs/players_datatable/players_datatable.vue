@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { PropType } from 'vue'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
@@ -46,8 +46,8 @@ const filteredPlayers = computed(() => {
       valA = a.Nickname.toLowerCase()
       valB = b.Nickname.toLowerCase()
     } else {
-      valA = a.Stats[sortBy.value]
-      valB = b.Stats[sortBy.value]
+      valA = a.Stats[sortBy.value] || 0
+      valB = b.Stats[sortBy.value] || 0
     }
 
     if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1
@@ -94,27 +94,73 @@ watch(searchTerm, () => {
   currentPage.value = 1
 })
 
-function calculatePercentiles(data: number[], percent: number) {
-  const sorted = [...data].sort((a, b) => a - b);
-  const index = (percent / 100) * (sorted.length - 1);
+// Función para calcular percentiles
+function calculatePercentiles(values: number[], percentile: number): number {
+  if (values.length === 0) return NaN;  // Devuelve NaN si la lista está vacía
+  values.sort((a, b) => a - b);  // Ordena los valores numéricos
+  const index = (percentile / 100) * (values.length - 1);
   const lower = Math.floor(index);
   const upper = Math.ceil(index);
   const weight = index - lower;
-  return sorted[lower] * (1 - weight) + sorted[upper] * weight;
+
+  if (upper >= values.length) return values[lower]; // Si el índice está en el límite superior
+  const res = values[lower] * (1 - weight) + values[upper] * weight;  // Interpolación
+  return res
 }
 
-const stats = ['Elo', 'KrRatio', 'KdRatio', 'HeadshotPercentAverage', 'KillsAverage', 'DeathsAverage', 'MVPAverage'] as const;
+// Variables reactivas para percentiles
+const percentiles = ref<Record<string, { p10: number, p95: number }>>({
+  Elo: { p10: NaN, p95: NaN },
+  KrRatio: { p10: NaN, p95: NaN },
+  KdRatio: { p10: NaN, p95: NaN },
+  HeadshotPercentAverage: { p10: NaN, p95: NaN },
+  KillsAverage: { p10: NaN, p95: NaN },
+  DeathsAverage: { p10: NaN, p95: NaN },
+  MVPAverage: { p10: NaN, p95: NaN },
+});
 
-const percentiles = stats.reduce((acc, stat) => {
-  const values = props.players.map(player => player.Stats[stat]);
-  acc[stat] = {
-    p10: calculatePercentiles(values, 12),
-    p95: calculatePercentiles(values, 85),
-  };
-  return acc;
-}, {} as Record<string, { p10: number, p95: number }>);
+// Calcular percentiles en el hook onMounted
+watch(
+  () => props.players,
+  (newPlayers) => {
+    if (newPlayers.length > 0) {
+      const stats = ['Elo', 'KrRatio', 'KdRatio', 'HeadshotPercentAverage', 'KillsAverage', 'DeathsAverage', 'MVPAverage'] as const;
+      
+      percentiles.value = stats.reduce((acc, stat) => {
+        const values = newPlayers
+          .map(player => player.Stats ? player.Stats[stat] : undefined)
+          .filter((value): value is number => typeof value === 'number' && !isNaN(value));  // Filtrar solo valores numéricos válidos
 
+        // Solo calcular percentiles si hay suficientes datos
+        if (values.length > 0) {
+          acc[stat] = {
+            p10: calculatePercentiles(values, 15),
+            p95: calculatePercentiles(values, 90),
+          };
+        } else {
+          acc[stat] = {
+            p10: NaN,
+            p95: NaN,
+          };
+        }
+
+        return acc;
+      }, {} as Record<string, { p10: number, p95: number }>);
+    }
+  },
+  { immediate: true }
+);
+
+// Función para obtener color basada en percentiles
 function getColor(stat: number, p10: number, p95: number, isInverse: boolean = false) {
+  if (isNaN(p10) || isNaN(p95)) {
+    console.error('Error: p10 o p95 es NaN', { stat, p10, p95 });
+    return 'text-gray-500';  // Color predeterminado en caso de error
+  }
+
+  const range = p95 - p10;
+  const step = range / 8;
+
   // Si es inverso, intercambiamos el comportamiento de los colores
   if (isInverse) {
     if (stat <= p10) {
@@ -122,8 +168,6 @@ function getColor(stat: number, p10: number, p95: number, isInverse: boolean = f
     } else if (stat >= p95) {
       return 'text-red-500';
     } else {
-      const range = p95 - p10;
-      const step = range / 8;
       if (stat < p10 + step) {
         return 'text-green-400';
       } else if (stat < p10 + step * 2) {
@@ -149,8 +193,6 @@ function getColor(stat: number, p10: number, p95: number, isInverse: boolean = f
     } else if (stat >= p95) {
       return 'text-green-500';
     } else {
-      const range = p95 - p10;
-      const step = range / 8;
       if (stat < p10 + step) {
         return 'text-red-400';
       } else if (stat < p10 + step * 2) {
