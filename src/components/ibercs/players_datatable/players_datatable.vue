@@ -2,7 +2,7 @@
 import { ref, computed, watch } from 'vue'
 import { PropType } from 'vue'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import Button from '@/components/ui/button/Button.vue'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
