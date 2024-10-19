@@ -108,7 +108,7 @@ const stats = ['Elo', 'KrRatio', 'KdRatio', 'HeadshotPercentAverage', 'KillsAver
 const percentiles = stats.reduce((acc, stat) => {
   const values = props.players.map(player => player.Stats[stat]);
   acc[stat] = {
-    p10: calculatePercentiles(values, 10),
+    p10: calculatePercentiles(values, 12),
     p95: calculatePercentiles(values, 85),
   };
   return acc;
