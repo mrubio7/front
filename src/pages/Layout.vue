@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useColorMode } from '@vueuse/core'
 import { Icon } from '@iconify/vue'
 import { PathRoutes } from '@/router';
+import Prominent_players from '@/components/ibercs/cards/prominent_players.vue';
 
 
 const mode = useColorMode()
@@ -55,19 +56,19 @@ const mode = useColorMode()
         <!-- Contenido principal con 3 columnas -->
         <div class="flex-grow flex">
             <!-- Sección izquierda -->
-            <div class="w-1/6 p-4 lg:block hidden">
-                
+            <div class="w-1/6 py-4 px-6 lg:block hidden">
+                <Prominent_players />
             </div>
 
             <!-- Sección central -->
-            <div class="lg:w-4/6 p-4 w-full">
+            <div class="lg:w-4/6 py-4 px-2 w-full">
                 <div class="border rounded-md p-2">
                     <RouterView />
                 </div>
             </div>
 
             <!-- Sección derecha -->
-            <div class="w-1/6 p-4 lg:block hidden">
+            <div class="w-1/6 py-4 px-6 lg:block hidden">
                 
             </div>
         </div>
