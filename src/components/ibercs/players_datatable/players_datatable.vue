@@ -93,6 +93,84 @@ const changeSort = (column: keyof PlayerModel['Stats'] | 'Nickname') => {
 watch(searchTerm, () => {
   currentPage.value = 1
 })
+
+function calculatePercentiles(data: number[], percent: number) {
+  const sorted = [...data].sort((a, b) => a - b);
+  const index = (percent / 100) * (sorted.length - 1);
+  const lower = Math.floor(index);
+  const upper = Math.ceil(index);
+  const weight = index - lower;
+  return sorted[lower] * (1 - weight) + sorted[upper] * weight;
+}
+
+const stats = ['Elo', 'KrRatio', 'KdRatio', 'HeadshotPercentAverage', 'KillsAverage', 'DeathsAverage', 'MVPAverage'] as const;
+
+const percentiles = stats.reduce((acc, stat) => {
+  const values = props.players.map(player => player.Stats[stat]);
+  acc[stat] = {
+    p10: calculatePercentiles(values, 10),
+    p95: calculatePercentiles(values, 85),
+  };
+  return acc;
+}, {} as Record<string, { p10: number, p95: number }>);
+
+function getColor(stat: number, p10: number, p95: number, isInverse: boolean = false) {
+  // Si es inverso, intercambiamos el comportamiento de los colores
+  if (isInverse) {
+    if (stat <= p10) {
+      return 'text-green-500';
+    } else if (stat >= p95) {
+      return 'text-red-500';
+    } else {
+      const range = p95 - p10;
+      const step = range / 8;
+      if (stat < p10 + step) {
+        return 'text-green-400';
+      } else if (stat < p10 + step * 2) {
+        return 'text-green-300';
+      } else if (stat < p10 + step * 3) {
+        return 'text-green-200';
+      } else if (stat < p10 + step * 4) {
+        return 'text-green-100';
+      } else if (stat < p10 + step * 5) {
+        return 'text-red-200';
+      } else if (stat < p10 + step * 6) {
+        return 'text-red-300';
+      } else if (stat < p10 + step * 7) {
+        return 'text-red-400';
+      } else {
+        return 'text-red-500';
+      }
+    }
+  } else {
+    // Comportamiento normal
+    if (stat <= p10) {
+      return 'text-red-500';
+    } else if (stat >= p95) {
+      return 'text-green-500';
+    } else {
+      const range = p95 - p10;
+      const step = range / 8;
+      if (stat < p10 + step) {
+        return 'text-red-400';
+      } else if (stat < p10 + step * 2) {
+        return 'text-red-300';
+      } else if (stat < p10 + step * 3) {
+        return 'text-red-200';
+      } else if (stat < p10 + step * 4) {
+        return 'text-green-100';
+      } else if (stat < p10 + step * 5) {
+        return 'text-green-200';
+      } else if (stat < p10 + step * 6) {
+        return 'text-green-300';
+      } else if (stat < p10 + step * 7) {
+        return 'text-green-400';
+      } else {
+        return 'text-green-500';
+      }
+    }
+  }
+}
 </script>
 
 <template>
@@ -200,12 +278,24 @@ watch(searchTerm, () => {
                 {{ player.Nickname }}
               </a>
             </TableCell>
-            <TableCell class="text-center">{{ player.Stats.KrRatio }}</TableCell>
-            <TableCell class="text-center">{{ player.Stats.KdRatio }}</TableCell>
-            <TableCell class="text-center">{{ player.Stats.HeadshotPercentAverage }}</TableCell>
-            <TableCell class="text-center">{{ player.Stats.KillsAverage }}</TableCell>
-            <TableCell class="text-center">{{ player.Stats.DeathsAverage }}</TableCell>
-            <TableCell class="text-center">{{ player.Stats.MVPAverage }}</TableCell>
+            <TableCell :class="getColor(player.Stats.KrRatio, percentiles.KrRatio.p10, percentiles.KrRatio.p95, false)" class="text-center">
+              {{ player.Stats.KrRatio }}
+            </TableCell>
+            <TableCell :class="getColor(player.Stats.KdRatio, percentiles.KdRatio.p10, percentiles.KdRatio.p95, false)" class="text-center">
+              {{ player.Stats.KdRatio }}
+            </TableCell>
+            <TableCell :class="getColor(player.Stats.HeadshotPercentAverage, percentiles.HeadshotPercentAverage.p10, percentiles.HeadshotPercentAverage.p95, false)" class="text-center">
+              {{ player.Stats.HeadshotPercentAverage }}
+            </TableCell>
+            <TableCell :class="getColor(player.Stats.KillsAverage, percentiles.KillsAverage.p10, percentiles.KillsAverage.p95, false)" class="text-center">
+              {{ player.Stats.KillsAverage }}
+            </TableCell>
+            <TableCell :class="getColor(player.Stats.DeathsAverage, percentiles.DeathsAverage.p10, percentiles.DeathsAverage.p95, true)" class="text-center">
+              {{ player.Stats.DeathsAverage }}
+            </TableCell>
+            <TableCell :class="getColor(player.Stats.MVPAverage, percentiles.MVPAverage.p10, percentiles.MVPAverage.p95, false)" class="text-center">
+              {{ player.Stats.MVPAverage }}
+            </TableCell>
           </TableRow>
         
         <!-- Mostrar un mensaje si no hay jugadores -->
