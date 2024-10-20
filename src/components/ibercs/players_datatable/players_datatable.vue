@@ -151,6 +151,8 @@ watch(
   { immediate: true }
 );
 
+const levels = ['text-green-700' ,'text-green-600', 'text-green-500', 'text-green-300', 'text-yellow-500', 'text-yellow-500', 'text-red-400', 'text-red-500', 'text-red-600']
+
 // Función para obtener color basada en percentiles
 function getColor(stat: number, p10: number, p95: number, isInverse: boolean = false) {
   if (isNaN(p10) || isNaN(p95)) {
@@ -164,51 +166,51 @@ function getColor(stat: number, p10: number, p95: number, isInverse: boolean = f
   // Si es inverso, intercambiamos el comportamiento de los colores
   if (isInverse) {
     if (stat <= p10) {
-      return 'text-green-500';
+      return levels[0];
     } else if (stat >= p95) {
-      return 'text-red-500';
+      return levels[8];
     } else {
       if (stat < p10 + step) {
-        return 'text-green-400';
+        return levels[1];
       } else if (stat < p10 + step * 2) {
-        return 'text-green-300';
+        return levels[2];
       } else if (stat < p10 + step * 3) {
-        return 'text-green-200';
+        return levels[3];
       } else if (stat < p10 + step * 4) {
-        return 'text-green-100';
+        return levels[4];
       } else if (stat < p10 + step * 5) {
-        return 'text-red-200';
+        return levels[5];
       } else if (stat < p10 + step * 6) {
-        return 'text-red-300';
+        return levels[6];
       } else if (stat < p10 + step * 7) {
-        return 'text-red-400';
+        return levels[7];
       } else {
-        return 'text-red-500';
+        return levels[8];
       }
     }
   } else {
     // Comportamiento normal
     if (stat <= p10) {
-      return 'text-red-500';
+      return levels[8];
     } else if (stat >= p95) {
-      return 'text-green-500';
+      return levels[1];
     } else {
       if (stat < p10 + step) {
-        return 'text-red-400';
+        return levels[7];
       } else if (stat < p10 + step * 2) {
-        return 'text-red-300';
+        return levels[6];
       } else if (stat < p10 + step * 3) {
-        return 'text-red-200';
+        return levels[5];
       } else if (stat < p10 + step * 4) {
-        return 'text-green-100';
+        return levels[4];
       } else if (stat < p10 + step * 5) {
-        return 'text-green-200';
+        return levels[3];
       } else if (stat < p10 + step * 6) {
-        return 'text-green-300';
+        return levels[2];
       } else if (stat < p10 + step * 7) {
-        return 'text-green-400';
+        return levels[1];
       } else {
-        return 'text-green-500';
+        return levels[0];
       }
     }
   }
