@@ -4,6 +4,7 @@ import { PropType } from 'vue'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import Button from '@/components/ui/button/Button.vue'
+import Spinner from '@/components/ui/spinner/Spinner.vue'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Icon } from '@iconify/vue'
@@ -11,10 +12,10 @@ import { PlayerModel } from '@/entities/players'
 
 // Props
 const props = defineProps({
-  players: {
-    type: Array as PropType<PlayerModel[]>,
-    required: true
-  }
+	players: {
+		type: Array as PropType<PlayerModel[]>,
+		required: true
+	}
 })
 
 // Estado para controlar la página actual y el tamaño de la página
@@ -30,32 +31,32 @@ const sortOrder = ref<'asc' | 'desc'>('desc') // orden por defecto
 
 // Computed property para filtrar y ordenar los jugadores
 const filteredPlayers = computed(() => {
-  let sortedPlayers = [...props.players]
+	let sortedPlayers = [...props.players]
 
-  // Filtrar por nombre de usuario
-  if (searchTerm.value) {
-    sortedPlayers = sortedPlayers.filter(player =>
-      player.Nickname.toLowerCase().includes(searchTerm.value.toLowerCase())
-    )
-  }
+	// Filtrar por nombre de usuario
+	if (searchTerm.value) {
+		sortedPlayers = sortedPlayers.filter(player =>
+			player.Nickname.toLowerCase().includes(searchTerm.value.toLowerCase())
+		)
+	}
 
-  // Ordenar por la columna seleccionada
-  sortedPlayers.sort((a, b) => {
-    let valA, valB
-    if (sortBy.value === 'Nickname') {
-      valA = a.Nickname.toLowerCase()
-      valB = b.Nickname.toLowerCase()
-    } else {
-      valA = a.Stats[sortBy.value] || 0
-      valB = b.Stats[sortBy.value] || 0
-    }
+	// Ordenar por la columna seleccionada
+	sortedPlayers.sort((a, b) => {
+		let valA, valB
+		if (sortBy.value === 'Nickname') {
+			valA = a.Nickname.toLowerCase()
+			valB = b.Nickname.toLowerCase()
+		} else {
+			valA = a.Stats[sortBy.value] || 0
+			valB = b.Stats[sortBy.value] || 0
+		}
 
-    if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1
-    if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1
-    return 0
-  })
+		if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1
+		if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1
+		return 0
+	})
 
-  return sortedPlayers
+	return sortedPlayers
 })
 
 // Cálculo del número total de páginas basado en los jugadores filtrados
@@ -63,309 +64,321 @@ const totalPages = computed(() => Math.ceil(filteredPlayers.value.length / pageS
 
 // Filtrar los jugadores que deben mostrarse en la página actual
 const paginatedPlayers = computed(() => {
-  const start = (currentPage.value - 1) * pageSize.value
-  const end = start + pageSize.value
-  return filteredPlayers.value.slice(start, end)
+	const start = (currentPage.value - 1) * pageSize.value
+	const end = start + pageSize.value
+	return filteredPlayers.value.slice(start, end)
 })
 
 // Funciones para cambiar de página
 const nextPage = () => {
-  if (currentPage.value < totalPages.value) currentPage.value++
+	if (currentPage.value < totalPages.value) currentPage.value++
 }
 
 const prevPage = () => {
-  if (currentPage.value > 1) currentPage.value--
+	if (currentPage.value > 1) currentPage.value--
 }
 
 // Función para cambiar la columna de ordenación
 const changeSort = (column: keyof PlayerModel['Stats'] | 'Nickname') => {
-  if (sortBy.value === column) {
-    // Cambiar el orden (ascendente/descendente) si se vuelve a hacer clic en la misma columna
-    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
-  } else {
-    // Cambiar la columna de ordenación
-    sortBy.value = column
-    sortOrder.value = 'asc' // restablecer a ascendente cuando se selecciona una nueva columna
-  }
+	if (sortBy.value === column) {
+		// Cambiar el orden (ascendente/descendente) si se vuelve a hacer clic en la misma columna
+		sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+	} else {
+		// Cambiar la columna de ordenación
+		sortBy.value = column
+		sortOrder.value = 'asc' // restablecer a ascendente cuando se selecciona una nueva columna
+	}
 }
 
 // Watcher para resetear la página actual cuando cambia el término de búsqueda
 watch(searchTerm, () => {
-  currentPage.value = 1
+	currentPage.value = 1
 })
 
 // Función para calcular percentiles
 function calculatePercentiles(values: number[], percentile: number): number {
-  if (values.length === 0) return NaN;  // Devuelve NaN si la lista está vacía
-  values.sort((a, b) => a - b);  // Ordena los valores numéricos
-  const index = (percentile / 100) * (values.length - 1);
-  const lower = Math.floor(index);
-  const upper = Math.ceil(index);
-  const weight = index - lower;
+	if (values.length === 0) return NaN;  // Devuelve NaN si la lista está vacía
+	values.sort((a, b) => a - b);  // Ordena los valores numéricos
+	const index = (percentile / 100) * (values.length - 1);
+	const lower = Math.floor(index);
+	const upper = Math.ceil(index);
+	const weight = index - lower;
 
-  if (upper >= values.length) return values[lower]; // Si el índice está en el límite superior
-  const res = values[lower] * (1 - weight) + values[upper] * weight;  // Interpolación
-  return res
+	if (upper >= values.length) return values[lower]; // Si el índice está en el límite superior
+	const res = values[lower] * (1 - weight) + values[upper] * weight;  // Interpolación
+	return res
 }
 
 // Variables reactivas para percentiles
 const percentiles = ref<Record<string, { p10: number, p95: number }>>({
-  Elo: { p10: NaN, p95: NaN },
-  KrRatio: { p10: NaN, p95: NaN },
-  KdRatio: { p10: NaN, p95: NaN },
-  HeadshotPercentAverage: { p10: NaN, p95: NaN },
-  KillsAverage: { p10: NaN, p95: NaN },
-  DeathsAverage: { p10: NaN, p95: NaN },
-  MVPAverage: { p10: NaN, p95: NaN },
+	Elo: { p10: NaN, p95: NaN },
+	KrRatio: { p10: NaN, p95: NaN },
+	KdRatio: { p10: NaN, p95: NaN },
+	HeadshotPercentAverage: { p10: NaN, p95: NaN },
+	KillsAverage: { p10: NaN, p95: NaN },
+	DeathsAverage: { p10: NaN, p95: NaN },
+	MVPAverage: { p10: NaN, p95: NaN },
 });
 
 // Calcular percentiles en el hook onMounted
 watch(
-  () => props.players,
-  (newPlayers) => {
-    if (newPlayers.length > 0) {
-      const stats = ['Elo', 'KrRatio', 'KdRatio', 'HeadshotPercentAverage', 'KillsAverage', 'DeathsAverage', 'MVPAverage'] as const;
-      
-      percentiles.value = stats.reduce((acc, stat) => {
-        const values = newPlayers
-          .map(player => player.Stats ? player.Stats[stat] : undefined)
-          .filter((value): value is number => typeof value === 'number' && !isNaN(value));  // Filtrar solo valores numéricos válidos
+	() => props.players,
+	(newPlayers) => {
+		if (newPlayers.length > 0) {
+			const stats = ['Elo', 'KrRatio', 'KdRatio', 'HeadshotPercentAverage', 'KillsAverage', 'DeathsAverage', 'MVPAverage'] as const;
+			
+			percentiles.value = stats.reduce((acc, stat) => {
+				const values = newPlayers
+					.map(player => player.Stats ? player.Stats[stat] : undefined)
+					.filter((value): value is number => typeof value === 'number' && !isNaN(value));  // Filtrar solo valores numéricos válidos
 
-        // Solo calcular percentiles si hay suficientes datos
-        if (values.length > 0) {
-          acc[stat] = {
-            p10: calculatePercentiles(values, 15),
-            p95: calculatePercentiles(values, 90),
-          };
-        } else {
-          acc[stat] = {
-            p10: NaN,
-            p95: NaN,
-          };
-        }
+				// Solo calcular percentiles si hay suficientes datos
+				if (values.length > 0) {
+					acc[stat] = {
+						p10: calculatePercentiles(values, 15),
+						p95: calculatePercentiles(values, 90),
+					};
+				} else {
+					acc[stat] = {
+						p10: NaN,
+						p95: NaN,
+					};
+				}
 
-        return acc;
-      }, {} as Record<string, { p10: number, p95: number }>);
-    }
-  },
-  { immediate: true }
+				return acc;
+			}, {} as Record<string, { p10: number, p95: number }>);
+		}
+	},
+	{ immediate: true }
 );
 
 const levels = ['text-green-700' ,'text-green-600', 'text-green-500', 'text-green-300', 'text-yellow-500', 'text-yellow-500', 'text-red-400', 'text-red-500', 'text-red-600']
 
 // Función para obtener color basada en percentiles
 function getColor(stat: number, p10: number, p95: number, isInverse: boolean = false) {
-  if (isNaN(p10) || isNaN(p95)) {
-    console.error('Error: p10 o p95 es NaN', { stat, p10, p95 });
-    return 'text-gray-500';  // Color predeterminado en caso de error
-  }
+	if (isNaN(p10) || isNaN(p95)) {
+		console.error('Error: p10 o p95 es NaN', { stat, p10, p95 });
+		return 'text-gray-500';  // Color predeterminado en caso de error
+	}
 
-  const range = p95 - p10;
-  const step = range / 8;
+	const range = p95 - p10;
+	const step = range / 8;
 
-  // Si es inverso, intercambiamos el comportamiento de los colores
-  if (isInverse) {
-    if (stat <= p10) {
-      return levels[0];
-    } else if (stat >= p95) {
-      return levels[8];
-    } else {
-      if (stat < p10 + step) {
-        return levels[1];
-      } else if (stat < p10 + step * 2) {
-        return levels[2];
-      } else if (stat < p10 + step * 3) {
-        return levels[3];
-      } else if (stat < p10 + step * 4) {
-        return levels[4];
-      } else if (stat < p10 + step * 5) {
-        return levels[5];
-      } else if (stat < p10 + step * 6) {
-        return levels[6];
-      } else if (stat < p10 + step * 7) {
-        return levels[7];
-      } else {
-        return levels[8];
-      }
-    }
-  } else {
-    // Comportamiento normal
-    if (stat <= p10) {
-      return levels[8];
-    } else if (stat >= p95) {
-      return levels[1];
-    } else {
-      if (stat < p10 + step) {
-        return levels[7];
-      } else if (stat < p10 + step * 2) {
-        return levels[6];
-      } else if (stat < p10 + step * 3) {
-        return levels[5];
-      } else if (stat < p10 + step * 4) {
-        return levels[4];
-      } else if (stat < p10 + step * 5) {
-        return levels[3];
-      } else if (stat < p10 + step * 6) {
-        return levels[2];
-      } else if (stat < p10 + step * 7) {
-        return levels[1];
-      } else {
-        return levels[0];
-      }
-    }
-  }
+	// Si es inverso, intercambiamos el comportamiento de los colores
+	if (isInverse) {
+		if (stat <= p10) {
+			return levels[0];
+		} else if (stat >= p95) {
+			return levels[8];
+		} else {
+			if (stat < p10 + step) {
+				return levels[1];
+			} else if (stat < p10 + step * 2) {
+				return levels[2];
+			} else if (stat < p10 + step * 3) {
+				return levels[3];
+			} else if (stat < p10 + step * 4) {
+				return levels[4];
+			} else if (stat < p10 + step * 5) {
+				return levels[5];
+			} else if (stat < p10 + step * 6) {
+				return levels[6];
+			} else if (stat < p10 + step * 7) {
+				return levels[7];
+			} else {
+				return levels[8];
+			}
+		}
+	} else {
+		// Comportamiento normal
+		if (stat <= p10) {
+			return levels[8];
+		} else if (stat >= p95) {
+			return levels[1];
+		} else {
+			if (stat < p10 + step) {
+				return levels[7];
+			} else if (stat < p10 + step * 2) {
+				return levels[6];
+			} else if (stat < p10 + step * 3) {
+				return levels[5];
+			} else if (stat < p10 + step * 4) {
+				return levels[4];
+			} else if (stat < p10 + step * 5) {
+				return levels[3];
+			} else if (stat < p10 + step * 6) {
+				return levels[2];
+			} else if (stat < p10 + step * 7) {
+				return levels[1];
+			} else {
+				return levels[0];
+			}
+		}
+	}
 }
 </script>
 
 <template>
-  <section class="w-full">
-    <span class="p-2 text-lg font-semibold">Estadísticas de jugadores</span>
+	<section class="w-full">
+		<span class="p-2 text-lg font-semibold">Estadísticas de jugadores</span>
 
-    <!-- Campo de búsqueda -->
-    <div class="flex px-2 mt-2 gap-2 items-center">
-      <Icon icon="radix-icons:magnifying-glass" class="h-[1.2rem] w-[1.2rem]" />
-      <div class="w-60 my-2">
-        <Input type="text" v-model="searchTerm" placeholder="Buscar por nickname..." />
-      </div>
-    </div>
+		<!-- Campo de búsqueda -->
+		<div class="flex px-2 mt-2 gap-2 items-center">
+			<Icon icon="radix-icons:magnifying-glass" class="h-[1.2rem] w-[1.2rem]" />
+			<div class="w-60 my-2">
+				<Input type="text" v-model="searchTerm" placeholder="Buscar por nickname..." />
+			</div>
+		</div>
 
-    <Table class="min-w-full rounded-md overflow-hidden">
-      <!-- Cabecera de la tabla -->
-      <TableHeader>
-        <TableRow class="w-full">
-          <!-- Ordenar por Elo -->
-          <TableHead class="cursor-pointer" @click="changeSort('Elo')">
-            <div class="flex items-center gap-1">
-              Elo
-              <Icon :icon="sortBy === 'Elo' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
-            </div>
-          </TableHead>
+		<Table class="min-w-full rounded-md overflow-hidden">
+			<!-- Cabecera de la tabla -->
+			<TableHeader>
+				<TableRow class="w-full">
+					<!-- Ordenar por Elo -->
+					<TableHead class="cursor-pointer" @click="changeSort('Elo')">
+						<div class="flex items-center gap-1">
+							Elo
+							<Icon :icon="sortBy === 'Elo' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
+						</div>
+					</TableHead>
 
-          <!-- Header Avatar -->
-          <TableHead class="cursor-pointer w-10">
-            <div class="flex items-center gap-1 justify-center">
-              
-            </div>
-          </TableHead>
+					<!-- Header Avatar -->
+					<TableHead class="cursor-pointer w-10">
+						<div class="flex items-center gap-1 justify-center">
+							
+						</div>
+					</TableHead>
 
-          <!-- Header Nickname -->
-          <TableHead class="cursor-pointer">
-            <div class="flex items-center gap-1 justify-left">
-              Nickname
-            </div>
-          </TableHead>
+					<!-- Header Nickname -->
+					<TableHead class="cursor-pointer">
+						<div class="flex items-center gap-1 justify-left">
+							Nickname
+						</div>
+					</TableHead>
 
-          <!-- Ordenar por KR Ratio -->
-          <TableHead class="cursor-pointer" @click="changeSort('KrRatio')">
-            <div class="flex items-center gap-1 justify-center">
-              KR Ratio
-              <Icon :icon="sortBy === 'KrRatio' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
-            </div>
-          </TableHead>
+					<!-- Ordenar por KR Ratio -->
+					<TableHead class="cursor-pointer" @click="changeSort('KrRatio')">
+						<div class="flex items-center gap-1 justify-center">
+							KR Ratio
+							<Icon :icon="sortBy === 'KrRatio' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
+						</div>
+					</TableHead>
 
-          <!-- Ordenar por KD Ratio -->
-          <TableHead class="cursor-pointer" @click="changeSort('KdRatio')">
-            <div class="flex items-center gap-1 justify-center">
-              KD Ratio
-              <Icon :icon="sortBy === 'KdRatio' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
-            </div>
-          </TableHead>
+					<!-- Ordenar por KD Ratio -->
+					<TableHead class="cursor-pointer" @click="changeSort('KdRatio')">
+						<div class="flex items-center gap-1 justify-center">
+							KD Ratio
+							<Icon :icon="sortBy === 'KdRatio' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
+						</div>
+					</TableHead>
 
-          <!-- Ordenar por Hs -->
-          <TableHead class="cursor-pointer" @click="changeSort('HeadshotPercentAverage')">
-            <div class="flex items-center gap-1 justify-center">
-              % Headshots
-              <Icon :icon="sortBy === 'HeadshotPercentAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
-            </div>
-          </TableHead>
+					<!-- Ordenar por Hs -->
+					<TableHead class="cursor-pointer" @click="changeSort('HeadshotPercentAverage')">
+						<div class="flex items-center gap-1 justify-center">
+							% Headshots
+							<Icon :icon="sortBy === 'HeadshotPercentAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
+						</div>
+					</TableHead>
 
-          <!-- Ordenar por Kills -->
-          <TableHead class="cursor-pointer" @click="changeSort('KillsAverage')">
-            <div class="flex items-center gap-1 justify-center">
-              Kills (Avg)
-              <Icon :icon="sortBy === 'KillsAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
-            </div>
-          </TableHead>
+					<!-- Ordenar por Kills -->
+					<TableHead class="cursor-pointer" @click="changeSort('KillsAverage')">
+						<div class="flex items-center gap-1 justify-center">
+							Kills (Avg)
+							<Icon :icon="sortBy === 'KillsAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
+						</div>
+					</TableHead>
 
-          <!-- Ordenar por Deaths -->
-          <TableHead class="cursor-pointer" @click="changeSort('DeathsAverage')">
-            <div class="flex items-center gap-1 justify-center">
-              Deaths (Avg)
-              <Icon :icon="sortBy === 'DeathsAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
-            </div>
-          </TableHead>
+					<!-- Ordenar por Deaths -->
+					<TableHead class="cursor-pointer" @click="changeSort('DeathsAverage')">
+						<div class="flex items-center gap-1 justify-center">
+							Deaths (Avg)
+							<Icon :icon="sortBy === 'DeathsAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
+						</div>
+					</TableHead>
 
-          <!-- Ordenar por Deaths -->
-          <TableHead class="cursor-pointer" @click="changeSort('MVPAverage')">
-            <div class="flex items-center gap-1 justify-right">
-              MVP (Avg)
-              <Icon :icon="sortBy === 'MVPAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
-            </div>
-          </TableHead>
-        </TableRow>
-      </TableHeader>
+					<!-- Ordenar por Deaths -->
+					<TableHead class="cursor-pointer" @click="changeSort('MVPAverage')">
+						<div class="flex items-center gap-1 justify-right">
+							MVP (Avg)
+							<Icon :icon="sortBy === 'MVPAverage' && sortOrder === 'asc' ? 'radix-icons:arrow-up' : 'radix-icons:arrow-down'" class="h-[0.8rem] w-[0.8rem] mt-0.5" />
+						</div>
+					</TableHead>
+				</TableRow>
+			</TableHeader>
 
-      <!-- Cuerpo de la tabla -->
-      <TableBody>
-      
-          <TableRow v-for="player in paginatedPlayers" :key="player.Id">
-            <TableCell class="text-left"><Badge variant="secondary">{{ player.Stats.Elo }}</Badge></TableCell>
-            <TableCell class="text-right">
-              <a :href="`https://www.faceit.com/es/players/${player.Nickname}`" target="_blank" rel="noopener noreferrer">
-                <Avatar class="w-7 h-7 flex">
-                  <AvatarImage :src="player.Avatar" alt="@radix-vue" />
-                </Avatar>
-              </a>
-            </TableCell>
-            <TableCell class="text-left hover:text-orange-500 transition">
-              <a :href="`https://www.faceit.com/es/players/${player.Nickname}`" target="_blank" rel="noopener noreferrer">
-                {{ player.Nickname }}
-              </a>
-            </TableCell>
-            <TableCell :class="getColor(player.Stats.KrRatio, percentiles.KrRatio.p10, percentiles.KrRatio.p95, false)" class="text-center">
-              {{ player.Stats.KrRatio }}
-            </TableCell>
-            <TableCell :class="getColor(player.Stats.KdRatio, percentiles.KdRatio.p10, percentiles.KdRatio.p95, false)" class="text-center">
-              {{ player.Stats.KdRatio }}
-            </TableCell>
-            <TableCell :class="getColor(player.Stats.HeadshotPercentAverage, percentiles.HeadshotPercentAverage.p10, percentiles.HeadshotPercentAverage.p95, false)" class="text-center">
-              {{ player.Stats.HeadshotPercentAverage }}
-            </TableCell>
-            <TableCell :class="getColor(player.Stats.KillsAverage, percentiles.KillsAverage.p10, percentiles.KillsAverage.p95, false)" class="text-center">
-              {{ player.Stats.KillsAverage }}
-            </TableCell>
-            <TableCell :class="getColor(player.Stats.DeathsAverage, percentiles.DeathsAverage.p10, percentiles.DeathsAverage.p95, true)" class="text-center">
-              {{ player.Stats.DeathsAverage }}
-            </TableCell>
-            <TableCell :class="getColor(player.Stats.MVPAverage, percentiles.MVPAverage.p10, percentiles.MVPAverage.p95, false)" class="text-center">
-              {{ player.Stats.MVPAverage }}
-            </TableCell>
-          </TableRow>
-        
-        <!-- Mostrar un mensaje si no hay jugadores -->
-        <TableRow v-if="paginatedPlayers.length === 0">
-          <TableCell colspan="8" class="text-center text-slate-400 py-6">
-            No se encontraron jugadores
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+			<!-- Cuerpo de la tabla -->
+			<TableBody>
+				<TableRow v-for="player in paginatedPlayers" :key="player.Id">
+					<TableCell class="text-left"><Badge variant="secondary">{{ player.Stats.Elo }}</Badge></TableCell>
+					<TableCell class="text-right">
+						<a :href="`https://www.faceit.com/es/players/${player.Nickname}`" target="_blank" rel="noopener noreferrer">
+							<Avatar class="w-7 h-7 flex">
+								<AvatarImage :src="player.Avatar" alt="@radix-vue" />
+							</Avatar>
+						</a>
+					</TableCell>
+					<TableCell class="text-left hover:text-orange-500 transition">
+						<a :href="`https://www.faceit.com/es/players/${player.Nickname}`" target="_blank" rel="noopener noreferrer">
+							{{ player.Nickname }}
+						</a>
+					</TableCell>
+					<TableCell :class="getColor(player.Stats.KrRatio, percentiles.KrRatio.p10, percentiles.KrRatio.p95, false)" class="text-center">
+						{{ player.Stats.KrRatio }}
+					</TableCell>
+					<TableCell :class="getColor(player.Stats.KdRatio, percentiles.KdRatio.p10, percentiles.KdRatio.p95, false)" class="text-center">
+						{{ player.Stats.KdRatio }}
+					</TableCell>
+					<TableCell :class="getColor(player.Stats.HeadshotPercentAverage, percentiles.HeadshotPercentAverage.p10, percentiles.HeadshotPercentAverage.p95, false)" class="text-center">
+						{{ player.Stats.HeadshotPercentAverage }}
+					</TableCell>
+					<TableCell :class="getColor(player.Stats.KillsAverage, percentiles.KillsAverage.p10, percentiles.KillsAverage.p95, false)" class="text-center">
+						{{ player.Stats.KillsAverage }}
+					</TableCell>
+					<TableCell :class="getColor(player.Stats.DeathsAverage, percentiles.DeathsAverage.p10, percentiles.DeathsAverage.p95, true)" class="text-center">
+						{{ player.Stats.DeathsAverage }}
+					</TableCell>
+					<TableCell :class="getColor(player.Stats.MVPAverage, percentiles.MVPAverage.p10, percentiles.MVPAverage.p95, false)" class="text-center">
+						{{ player.Stats.MVPAverage }}
+					</TableCell>
+				</TableRow>
+				
+				<!-- Mostrar un mensaje si no hay jugadores -->
 
-    <div class="flex justify-between">
-      <div class="flex flex-col justify-end px-2">
-        <span class="text-xs text-slate-600 mb-2">(Últimas 12 partidas)</span>
-        <span class="text-sm text-slate-600">{{ players.length }} jugadores encontrados</span>
-      </div>
-      <!-- Controles de paginación -->
-      <div class="flex justify-end gap-4 items-center mt-4">
-        <Button @click="prevPage" variant="outline" :disabled="currentPage === 1">
-          <Icon icon="radix-icons:arrow-left" class="h-[1.2rem] w-[1.2rem]" />
-        </Button>
-        <span class="text-sm">{{ currentPage }} / {{ totalPages }}</span>
-        <Button @click="nextPage" variant="outline" :disabled="currentPage === totalPages">
-          <Icon icon="radix-icons:arrow-right" class="h-[1.2rem] w-[1.2rem]" />
-        </Button>
-      </div>
-    </div>
-  </section>
+				<TableRow v-if="props.players.length == 0">
+					<TableCell colspan="9" class="text-center text-slate-400 py-6">
+						<div class="flex flex-col gap-2 justify-center items-center">
+							<Spinner />
+							<span class="mt-2">Cargando jugadores...</span>
+						</div>
+					</TableCell>
+				</TableRow>
+
+				<TableRow v-if="paginatedPlayers.length === 0 && props.players.length > 0">
+					<TableCell colspan="9" class="text-center text-slate-400 py-6">
+						<div class="flex justify-center items-center">
+							<div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-slate-400"></div>
+						</div>
+						No se encontraron jugadores
+					</TableCell>
+				</TableRow>
+			</TableBody>
+		</Table>
+
+		<div class="flex justify-between">
+			<div class="flex flex-col justify-end px-2">
+				<span class="text-xs text-slate-600 mb-2">(Últimas 12 partidas)</span>
+				<span class="text-sm text-slate-600">{{ players.length }} jugadores encontrados</span>
+			</div>
+			<!-- Controles de paginación -->
+			<div class="flex justify-end gap-4 items-center mt-4">
+				<Button @click="prevPage" variant="outline" :disabled="currentPage === 1">
+					<Icon icon="radix-icons:arrow-left" class="h-[1.2rem] w-[1.2rem]" />
+				</Button>
+				<span class="text-sm">{{ currentPage }} / {{ totalPages }}</span>
+				<Button @click="nextPage" variant="outline" :disabled="currentPage === totalPages">
+					<Icon icon="radix-icons:arrow-right" class="h-[1.2rem] w-[1.2rem]" />
+				</Button>
+			</div>
+		</div>
+	</section>
 </template>

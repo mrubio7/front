@@ -35,7 +35,12 @@ onMounted(async () => {
                             </RouterLink>
                             <RouterLink :to="PathRoutes.Ladder_Players">
                                 <NavigationMenuItem :class="navigationMenuTriggerStyle()" class="cursor-pointer">
-                                    Estadisticas
+                                    Jugadores
+                                </NavigationMenuItem>
+                            </RouterLink>
+                            <RouterLink :to="PathRoutes.Ladder_Equipos">
+                                <NavigationMenuItem :class="navigationMenuTriggerStyle()" class="cursor-pointer">
+                                    Equipos
                                 </NavigationMenuItem>
                             </RouterLink>
                         </div>
