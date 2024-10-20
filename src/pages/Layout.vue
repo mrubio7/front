@@ -62,7 +62,7 @@ onMounted(async () => {
         </div>
 
         <!-- Contenido principal con 3 columnas -->
-        <div class="flex-grow flex">
+        <div class="flex-grow flex px-2">
             <!-- Sección izquierda -->
             <div class="w-1/6 py-4 px-6 lg:block hidden">
                 <Prominent_players :players="prominentPlayers" />
@@ -76,19 +76,32 @@ onMounted(async () => {
             </div>
 
             <!-- Sección derecha -->
-            <div class="w-1/6 py-4 px-6 lg:block hidden">
+            <div class="w-1/6 p-4 lg:block hidden">
                 
             </div>
         </div>
 
         <!-- Footer siempre abajo -->
         <footer class="border-t">
-            <div class="p-1 flex justify-between px-4 h-full">
+            <div class="p-1 flex justify-between px-4 py-2 h-full">
                 <div class="text-sm">
                     <img src="/public/logo.png" width="80" class=""/>
                 </div>
-                <div class="h-20 flex items-end">
-                    <span class="text-sm">Made with ❤︎</span>
+                <div>
+                    <div class="flex flex-col justify-between items-end p-1">
+                        <a href="https://www.x.com/ibercs_com" target=”_blank” class="rounded p-1.5 hover:bg-slate-900 cursor-pointer transition">
+                            <span>
+                                <img src="/X_logo.png" width="18" />
+                            </span>
+                        </a>
+                    </div>
+                    <div class="flex mb-1">
+                        <span class="text-sm text-slate-500">info@ibercs.com</span>
+                    </div>
+                    <div class="flex gap-1 justify-end items-center text-slate-500">
+                        <span class="text-sm">Made with </span>
+                        <Icon icon="radix-icons:heart-filled" class="h-[0.8rem] w-[0.8rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                    </div>
                 </div>
             </div>
         </footer>

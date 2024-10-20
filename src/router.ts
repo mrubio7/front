@@ -4,11 +4,13 @@ import HomeView from './pages/HomeView.vue'
 import Layout from './pages/Layout.vue'
 import LadderPlayersView from './pages/LadderPlayersView.vue'
 import LadderTeamsView from './pages/LadderTeamsView.vue'
+import TeamProfileView from './pages/TeamProfileView.vue'
 
 export const PathRoutes = {
 	Home: "/",
 	Ladder_Players: "/ladder/players",
-	Ladder_Equipos: "/ladder/teams"
+	Ladder_Equipos: "/ladder/teams",
+	Team_Profile: "/team/:team_name"
 }
 
 const routes = [
@@ -16,6 +18,7 @@ const routes = [
 		{ path: "", component: HomeView },
 		{ path: PathRoutes.Ladder_Players, component: LadderPlayersView },
 		{ path: PathRoutes.Ladder_Equipos, component: LadderTeamsView },
+		{ path: PathRoutes.Team_Profile, component: TeamProfileView }
 	]},
 ]
 

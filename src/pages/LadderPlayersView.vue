@@ -6,6 +6,8 @@
 
     const players = ref([] as PlayerModel[]);
 
+    document.title = "IBERCS - Jugadores"
+
     onMounted(async () => {
         players.value = await ApiBackend.Players.GetAll();
     });
