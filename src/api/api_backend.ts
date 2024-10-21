@@ -38,7 +38,7 @@ export const ApiBackend = {
             return res.data as TeamsModel
         },
         GetByNickname: async (nickname:string) => {
-            const endpoint = `http://localhost:8080/api/v1/teams/get?nickname=${nickname}`;
+            const endpoint = `${getHost()}/teams/get?nickname=${nickname}`;
             const res = await basic_get(endpoint) 
             return res.data as TeamsModel
         }
