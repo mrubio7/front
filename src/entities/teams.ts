@@ -7,6 +7,9 @@ export interface TeamsModel {
     Active: boolean;
     PlayersId: string[];
     Stats: TeamStats;
+    Twitter: string;
+    Instagram: string;
+    Website: string;
 }
 
 interface TeamStats {

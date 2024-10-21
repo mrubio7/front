@@ -22,7 +22,7 @@
 			</p>
 
 			<div class="flex justify-end -mt-36 opacity-10">
-				<img src="/public/logo.png" width="130"/>
+				<img src="/logo.png" width="130"/>
 			</div>
 		</div>
 	</div>

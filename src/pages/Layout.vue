@@ -29,7 +29,7 @@ onMounted(async () => {
                             <RouterLink :to="PathRoutes.Home">
                                 <NavigationMenuItem :class="navigationMenuTriggerStyle()" class="cursor-pointer">
                                     <div>
-                                        <img src="/public/logo.png" width="30"/>
+                                        <img src="/logo.png" width="30"/>
                                     </div>
                                 </NavigationMenuItem>
                             </RouterLink>
@@ -85,13 +85,13 @@ onMounted(async () => {
         <footer class="border-t">
             <div class="p-1 flex justify-between px-4 py-2 h-full">
                 <div class="text-sm">
-                    <img src="/public/logo.png" width="80" class=""/>
+                    <img src="/logo.png" width="80" class=""/>
                 </div>
                 <div>
                     <div class="flex flex-col justify-between items-end p-1">
-                        <a href="https://www.x.com/ibercs_com" target=”_blank” class="rounded p-1.5 hover:bg-slate-900 cursor-pointer transition">
+                        <a href="https://www.x.com/ibercs_com" target=”_blank” class="rounded p-1.5 hover:bg-slate-300 dark:hover:bg-slate-900 cursor-pointer transition">
                             <span>
-                                <img src="/X_logo.png" width="18" />
+                                <Icon icon="ri:twitter-x-line" class="h-[1.25rem] w-[1.25rem] scale-0 transition-all rotate-0 scale-100 dark:text-slate-400 text-slate-500" />
                             </span>
                         </a>
                     </div>

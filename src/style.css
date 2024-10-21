@@ -89,3 +89,28 @@ nav div {
 nav div ul {
   justify-content: none;
 }
+
+/* SCROLL TOOLBAR */
+section::-webkit-scrollbar {
+  margin-top: 10px;
+  height: 8px;
+}
+
+/* Modo claro por defecto */
+section::-webkit-scrollbar-thumb {
+  background-color: rgb(200, 200, 200); /* Color claro para thumb */
+  border-radius: 10px;
+}
+
+section::-webkit-scrollbar-track {
+  background-color: rgb(240, 240, 240); /* Color claro para track */
+}
+
+/* Modo oscuro */
+.dark section::-webkit-scrollbar-thumb {
+  background-color: rgb(20, 20, 20); /* Color oscuro para thumb */
+}
+
+.dark section::-webkit-scrollbar-track {
+  background-color: rgb(7, 7, 7); /* Color oscuro para track */
+}
