@@ -15,6 +15,7 @@ const team = ref({} as TeamsModel)
 const players = ref([] as PlayerModel[])
 
 onMounted(async () => {
+    document.title = `IBERCS - ${teamNickname}`
     team.value = await ApiBackend.Teams.GetByNickname(teamNickname as string)
     players.value = await ApiBackend.Players.Get(team.value.PlayersId)
 })
@@ -27,7 +28,7 @@ onMounted(async () => {
         </div>
         <div v-else class="flex flex-col">
             <div class="flex gap-6 mb-2">
-                <img :src="team.Avatar" width="auto" class="border-2 rounded-md min-h-20 min-w-20 object-cover"/>
+                <img :src="team.Avatar" width="auto" class="border-2 rounded-md min-h-20 min-w-20 max-w-80 object-cover"/>
                 <div class="w-full flex flex-col justify-between">
                     <div class="flex justify-between">
                         <div class="flex flex-col gap-4 items-start">

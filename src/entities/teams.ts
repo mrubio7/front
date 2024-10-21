@@ -10,6 +10,7 @@ export interface TeamsModel {
     Twitter: string;
     Instagram: string;
     Website: string;
+    Tournaments: string[];
 }
 
 interface TeamStats {

@@ -313,7 +313,7 @@ function getColor(stat: number, p10: number, p95: number, isInverse: boolean = f
 					<TableCell class="text-right">
 						<a :href="`https://www.faceit.com/es/players/${player.Nickname}`" target="_blank" rel="noopener noreferrer">
 							<Avatar class="w-7 h-7 flex">
-								<AvatarImage :src="player.Avatar" alt="@radix-vue" />
+								<AvatarImage :src="player.Avatar" alt="avatar" />
 							</Avatar>
 						</a>
 					</TableCell>
