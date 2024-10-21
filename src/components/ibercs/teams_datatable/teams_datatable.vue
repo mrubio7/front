@@ -28,7 +28,7 @@ const props = defineProps({
 			<div v-for="team in props.teams">
 				<a :href="PathRoutes.Team_Profile.replace(':team_name', team.Nickname)">
 					<div class="flex items-center border border-slate-800 rounded-sm transition py-2 px-4 hover:bg-slate-900 cursor-pointer justify-between">
-						<div class="flex items-center gap-6 w-2/5 justify-between">
+						<div class="flex items-center gap-6 xl:w-2/5 w-full justify-between">
 							<div class="flex items-center gap-4">
 								<Avatar class="border-2 border-slate-800">
 									<AvatarImage :src="team.Avatar" alt="team avatar" />
@@ -49,7 +49,7 @@ const props = defineProps({
 								</span>
 							</div>
 						</div>
-						<div class="flex items-center gap-4 w-3/5 justify-end">
+						<div class="items-center gap-4 w-3/5 justify-end hidden xl:flex">
 							<div v-for="map in team.Stats.MapStats" class="relative h-full">
 								<div class="border border-slate-700 rounded overflow-hidden transition relative">
 								<img :src="`/maps/${map.MapName}.jpeg`" width="65" class="object-cover" />

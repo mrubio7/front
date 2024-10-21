@@ -108,9 +108,9 @@ section::-webkit-scrollbar-track {
 
 /* Modo oscuro */
 .dark section::-webkit-scrollbar-thumb {
-  background-color: rgb(20, 20, 20); /* Color oscuro para thumb */
+  background-color: rgb(45, 45, 45); /* Color oscuro para thumb */
 }
 
 .dark section::-webkit-scrollbar-track {
-  background-color: rgb(7, 7, 7); /* Color oscuro para track */
+  background-color: rgb(15, 15, 15); /* Color oscuro para track */
 }
