@@ -36,7 +36,7 @@ const filteredPlayers = computed(() => {
 	// Filtrar por nombre de usuario
 	if (searchTerm.value) {
 		sortedPlayers = sortedPlayers.filter(player =>
-			player.Nickname.toLowerCase().includes(searchTerm.value.toLowerCase())
+			player.Nickname?.toLowerCase().includes(searchTerm.value.toLowerCase())
 		)
 	}
 
