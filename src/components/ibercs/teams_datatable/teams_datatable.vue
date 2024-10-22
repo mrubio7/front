@@ -107,7 +107,7 @@ const goToPage = (page: number) => {
 		<div v-else class="flex flex-col gap-4 p-4">
 			<div v-for="team in paginatedTeams" :key="team.Id">
 				<a :href="PathRoutes.Team_Profile.replace(':team_name', team.Nickname)">
-					<div class="flex items-center border dark:border-slate-800 border-slate-300 rounded-sm transition py-2 px-4 hover:bg-slate-900 cursor-pointer justify-between">
+					<div class="flex items-center border dark:border-slate-800 border-slate-300 rounded-sm transition py-2 px-4 dark:hover:bg-slate-900 hover:bg-slate-100 cursor-pointer justify-between">
 						<div class="flex items-center gap-6 xl:w-3/5 w-full justify-between">
 							<div class="flex items-center gap-4">
 								<Avatar class="border dark:border-slate-800 border-slate-400">
