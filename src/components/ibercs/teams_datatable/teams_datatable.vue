@@ -10,7 +10,7 @@ import { GetTournamentColor } from '@/libs/utils';
 import { TOURNAMENT_PRIORITY } from '@/libs/consts';
 import Button from '@/components/ui/button/Button.vue'
 import { Icon } from '@iconify/vue/dist/iconify.js';
-import { Select, SelectContent, SelectGroup,SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select'
+import { Select, SelectContent, SelectGroup,SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select.vue'
 
 // Props para los equipos
 const props = defineProps({
