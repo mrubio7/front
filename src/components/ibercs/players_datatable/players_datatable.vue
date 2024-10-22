@@ -322,22 +322,25 @@ function getColor(stat: number, p10: number, p95: number, isInverse: boolean = f
 							{{ player.Nickname }}
 						</a>
 					</TableCell>
-					<TableCell :class="getColor(player.Stats.KrRatio, percentiles.KrRatio.p10, percentiles.KrRatio.p95, false)" class="text-center">
+					<TableCell v-if="player.Stats.KdRatio == undefined" colspan="6" class="mt-0.5 ml-10 text-slate-500 text-center">
+						No existen partidas recientes
+					</TableCell>
+					<TableCell v-if="player.Stats.KrRatio != undefined" :class="getColor(player.Stats.KrRatio, percentiles.KrRatio.p10, percentiles.KrRatio.p95, false)" class="text-center">
 						{{ player.Stats.KrRatio }}
 					</TableCell>
-					<TableCell :class="getColor(player.Stats.KdRatio, percentiles.KdRatio.p10, percentiles.KdRatio.p95, false)" class="text-center">
+					<TableCell v-if="player.Stats.KdRatio != undefined"  :class="getColor(player.Stats.KdRatio, percentiles.KdRatio.p10, percentiles.KdRatio.p95, false)" class="text-center">
 						{{ player.Stats.KdRatio }}
 					</TableCell>
-					<TableCell :class="getColor(player.Stats.HeadshotPercentAverage, percentiles.HeadshotPercentAverage.p10, percentiles.HeadshotPercentAverage.p95, false)" class="text-center">
+					<TableCell v-if="player.Stats.HeadshotPercentAverage != undefined" :class="getColor(player.Stats.HeadshotPercentAverage, percentiles.HeadshotPercentAverage.p10, percentiles.HeadshotPercentAverage.p95, false)" class="text-center">
 						{{ player.Stats.HeadshotPercentAverage }}
 					</TableCell>
-					<TableCell :class="getColor(player.Stats.KillsAverage, percentiles.KillsAverage.p10, percentiles.KillsAverage.p95, false)" class="text-center">
+					<TableCell v-if="player.Stats.KillsAverage != undefined" :class="getColor(player.Stats.KillsAverage, percentiles.KillsAverage.p10, percentiles.KillsAverage.p95, false)" class="text-center">
 						{{ player.Stats.KillsAverage }}
 					</TableCell>
-					<TableCell :class="getColor(player.Stats.DeathsAverage, percentiles.DeathsAverage.p10, percentiles.DeathsAverage.p95, true)" class="text-center">
+					<TableCell v-if="player.Stats.DeathsAverage != undefined" :class="getColor(player.Stats.DeathsAverage, percentiles.DeathsAverage.p10, percentiles.DeathsAverage.p95, true)" class="text-center">
 						{{ player.Stats.DeathsAverage }}
 					</TableCell>
-					<TableCell :class="getColor(player.Stats.MVPAverage, percentiles.MVPAverage.p10, percentiles.MVPAverage.p95, false)" class="text-center">
+					<TableCell v-if="player.Stats.MVPAverage != undefined" :class="getColor(player.Stats.MVPAverage, percentiles.MVPAverage.p10, percentiles.MVPAverage.p95, false)" class="text-center">
 						{{ player.Stats.MVPAverage }}
 					</TableCell>
 				</TableRow>
