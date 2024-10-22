@@ -39,7 +39,9 @@ const availableTournaments = computed(() => {
 // Filtrar y ordenar los equipos según el torneo seleccionado
 const filteredTeams = computed(() => {
 	let teams = props.teams;
-	if (selectedTournament.value) {
+
+	// Si el torneo seleccionado no es "all" o undefined, aplicamos el filtro
+	if (selectedTournament.value && selectedTournament.value !== "all") {
 		teams = teams.filter(team =>
 			team.Tournaments.includes(selectedTournament.value as string)
 		);
