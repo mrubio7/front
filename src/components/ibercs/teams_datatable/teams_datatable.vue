@@ -10,7 +10,7 @@ import { GetTournamentColor } from '@/libs/utils';
 import { TOURNAMENT_PRIORITY } from '@/libs/consts';
 import Button from '@/components/ui/button/Button.vue'
 import { Icon } from '@iconify/vue/dist/iconify.js';
-import { Select, SelectContent, SelectGroup,SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select.vue'
+import { Select, SelectContent, SelectGroup,SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 // Props para los equipos
 const props = defineProps({
@@ -21,7 +21,7 @@ const props = defineProps({
 });
 
 // Estado para el filtro del torneo seleccionado
-const selectedTournament = ref<string | null>(null);
+const selectedTournament = ref<string | undefined>(undefined);
 
 // Estado para controlar la página actual
 const currentPage = ref(1);
@@ -88,7 +88,7 @@ const goToPage = (page: number) => {
 				</SelectTrigger>
 				<SelectContent>
 					<SelectGroup>
-						<SelectItem>Todos los torneos</SelectItem>
+						<SelectItem value="all">Todos los torneos</SelectItem>
 						<SelectItem v-for="tournament in availableTournaments" :key="tournament" :value="tournament">
 							{{ tournament }}
 						</SelectItem>
