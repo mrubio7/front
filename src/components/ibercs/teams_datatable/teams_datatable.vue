@@ -80,8 +80,7 @@ const goToPage = (page: number) => {
 		<span class="p-2 text-lg font-semibold">Tabla de equipos</span>
 
 		<!-- Selector para filtrar por torneo -->
-		<div class="p-4">
-
+		<div class="p-4 pb-2">
 			<Select v-model="selectedTournament" id="tournament-selector" class="block w-full p-2 border border-slate-300 rounded-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
 				<SelectTrigger>
 					<SelectValue placeholder="Selecciona una liga" />
@@ -99,13 +98,11 @@ const goToPage = (page: number) => {
 
 		<div v-if="paginatedTeams.length === 0">
 			<div class="flex flex-col gap-4 p-4">
-				<Skeleton class="w-full h-16 rounded-sm" />
-				<Skeleton class="w-full h-16 rounded-sm" />
-				<Skeleton class="w-full h-16 rounded-sm" />
+				<Skeleton class="w-full h-14 rounded-sm" v-for="_ in 8" />
 			</div>
 		</div>
 
-		<div class="flex flex-col gap-4 p-4">
+		<div v-else class="flex flex-col gap-4 p-4">
 			<div v-for="team in paginatedTeams" :key="team.Id">
 				<a :href="PathRoutes.Team_Profile.replace(':team_name', team.Nickname)">
 					<div class="flex items-center border dark:border-slate-800 border-slate-300 rounded-sm transition py-2 px-4 hover:bg-slate-900 cursor-pointer justify-between">
@@ -145,7 +142,7 @@ const goToPage = (page: number) => {
 				<span class="text-sm text-slate-600">{{ teams.length }} equipos encontrados</span>
 			</div>
 			<!-- Controles de paginación -->
-			<div class="flex justify-end gap-4 items-center mt-4 mr-4">
+			<div class="flex justify-end gap-4 items-center mr-4">
 				<div class="flex justify-end gap-4 items-center mt-4">
 					<Button @click="goToPage(currentPage - 1)" variant="outline" :disabled="currentPage === 1">
 						<Icon icon="radix-icons:arrow-left" class="h-[1.2rem] w-[1.2rem]" />
