@@ -89,7 +89,7 @@ const goToPage = (page: number) => {
 				</SelectTrigger>
 				<SelectContent>
 					<SelectGroup>
-						<SelectItem value="all">Todos los torneos</SelectItem>
+						<SelectItem value="all">Todas las ligas</SelectItem>
 						<SelectItem v-for="tournament in availableTournaments" :key="tournament" :value="tournament">
 							{{ tournament }}
 						</SelectItem>
