@@ -1,4 +1,4 @@
-import { ref, computed, watch, PropType, Ref } from 'vue';
+import { computed, Ref } from 'vue';
 import { PlayerModel } from '@/entities/players';
 
 export interface PlayerWithRank extends PlayerModel {

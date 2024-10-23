@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, watchEffect } from 'vue'
+import { ref, computed, watch, watchEffect } from 'vue'
 import { PropType } from 'vue'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
@@ -209,7 +209,7 @@ watch(
 
 			<!-- Cuerpo de la tabla -->
 			<TableBody>
-				<TableRow v-for="(player, n) in paginatedPlayers" :key="player.Id">
+				<TableRow v-for="(player) in paginatedPlayers" :key="player.Id">
 					<TableCell class="text-left w-8 font-semibold text-slate-500">
 						{{ player.GlobalRank }}º
 					</TableCell>
