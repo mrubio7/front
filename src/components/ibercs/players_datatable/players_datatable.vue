@@ -10,6 +10,11 @@ import { Input } from '@/components/ui/input'
 import { Icon } from '@iconify/vue'
 import { PlayerModel } from '@/entities/players'
 import { calculatePercentiles, filterPlayers, getColor } from './utils'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute();
+const router = useRouter();
+const q = route.query["search"];
 
 // Props
 const props = defineProps({
@@ -26,17 +31,28 @@ interface PlayerWithRank extends PlayerModel {
 const currentPage = ref(1)
 const pageSize = ref(12) // Número de jugadores por página
 
-const searchTerm = ref('')
+const searchTerm = ref<string>(Array.isArray(route.query["search"]) ? route.query["search"][0] || '' : (route.query["search"] as string || ''));
 const sortBy = ref<keyof PlayerModel['Stats'] | 'Nickname'>('Elo')
 const sortOrder = ref<'asc' | 'desc'>('desc') // orden por defecto
 
 const filteredPlayers = ref<PlayerWithRank[]>([]);
 
+
+watch(searchTerm, (newTerm) => {
+  // Actualizar el query param 'search' cuando cambie `searchTerm`
+  router.replace({
+    query: {
+      ...route.query,
+      search: newTerm || undefined // Elimina el parámetro si está vacío
+    }
+  });
+});
+
 // Usar `watchEffect` para actualizar jugadores filtrados cuando props.players o los términos cambien
 watchEffect(() => {
-  if (props.players.length) {
-    filteredPlayers.value = filterPlayers(props.players, searchTerm, sortBy, sortOrder).value;
-  }
+	if (props.players.length) {
+		filteredPlayers.value = filterPlayers(props.players, searchTerm, sortBy, sortOrder).value;
+	}
 });
 
 const totalPages = computed(() => Math.ceil(filteredPlayers.value.length / pageSize.value) || 1)
@@ -217,7 +233,7 @@ watch(
 					<TableCell class="text-right">
 						<a :href="`https://www.faceit.com/es/players/${player.Nickname}`" target="_blank" rel="noopener noreferrer">
 							<Avatar class="w-7 h-7 flex">
-								<AvatarImage :src="player.Avatar" alt="avatar" />
+								<AvatarImage v-if="player.Avatar != undefined" :src="player.Avatar" alt="avatar" />
 							</Avatar>
 						</a>
 					</TableCell>
