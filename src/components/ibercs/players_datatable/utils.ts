@@ -2,52 +2,50 @@ import { computed, Ref } from 'vue';
 import { PlayerModel } from '@/entities/players';
 
 export interface PlayerWithRank extends PlayerModel {
-  GlobalRank: number;
+	GlobalRank: number;
 }
 
 export const filterPlayers = (
-    players: PlayerModel[],
-    searchTerm: Ref<string>,
-    sortBy: Ref<keyof PlayerModel['Stats'] | 'Nickname'>,
-    sortOrder: Ref<'asc' | 'desc'>
-  ) => {
-    return computed<PlayerWithRank[]>(() => {
-      let sortedPlayers = [...players];
-  
-      // Ordenar por la columna seleccionada
-      sortedPlayers.sort((a, b) => {
-        let valA, valB;
-        if (sortBy.value === 'Nickname') {
-          valA = a.Nickname.toLowerCase();
-          valB = b.Nickname.toLowerCase();
-        } else {
-          valA = a.Stats[sortBy.value] || 0;
-          valB = b.Stats[sortBy.value] || 0;
-        }
-  
-        if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1;
-        if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1;
-        return 0;
-      });
-  
-      // Añadir el campo GlobalRank basado en la posición en sortedPlayers
-      const rankedPlayers = sortedPlayers.map((player, index) => ({
-        ...player,
-        GlobalRank: index + 1, // Índice de la lista global + 1
-      }));
-  
-      // Aplicar el filtro de búsqueda después de asignar el GlobalRank
-      if (searchTerm.value) {
-        return rankedPlayers.filter((player) =>
-          player.Nickname?.toLowerCase().includes(searchTerm.value.toLowerCase())
-        );
-      }
-  
-      return rankedPlayers;
-    });
-  };
-
-
+	players: PlayerModel[],
+	searchTerm: Ref<string>,
+	sortBy: Ref<keyof PlayerModel['Stats'] | 'Nickname'>,
+	sortOrder: Ref<'asc' | 'desc'>
+) => {
+	return computed<PlayerWithRank[]>(() => {
+		let sortedPlayers = [...players];
+	
+		// Ordenar por la columna seleccionada
+		sortedPlayers.sort((a, b) => {
+			let valA, valB;
+			if (sortBy.value === 'Nickname') {
+				valA = a.Nickname.toLowerCase();
+				valB = b.Nickname.toLowerCase();
+			} else {
+				valA = a.Stats[sortBy.value] || 0;
+				valB = b.Stats[sortBy.value] || 0;
+			}
+	
+			if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1;
+			if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1;
+			return 0;
+		});
+	
+		// Añadir el campo GlobalRank basado en la posición en sortedPlayers
+		const rankedPlayers = sortedPlayers.map((player, index) => ({
+			...player,
+			GlobalRank: index + 1, // Índice de la lista global + 1
+		}));
+	
+		// Aplicar el filtro de búsqueda después de asignar el GlobalRank
+		if (searchTerm.value) {
+			return rankedPlayers.filter((player) =>
+			player.Nickname?.toLowerCase().includes(searchTerm.value.toLowerCase())
+			);
+		}
+	
+		return rankedPlayers;
+	});
+};
 
 const levels = ['text-green-700' ,'text-green-600', 'text-green-500', 'text-green-300', 'text-yellow-500', 'text-yellow-500', 'text-red-400', 'text-red-500', 'text-red-600']
 
