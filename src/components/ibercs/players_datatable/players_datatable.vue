@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted, watchEffect } from 'vue'
 import { PropType } from 'vue'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Icon } from '@iconify/vue'
 import { PlayerModel } from '@/entities/players'
+import { calculatePercentiles, filterPlayers, getColor } from './utils'
 
 // Props
 const props = defineProps({
@@ -18,58 +19,34 @@ const props = defineProps({
 	}
 })
 
-// Estado para controlar la página actual y el tamaño de la página
+interface PlayerWithRank extends PlayerModel {
+  GlobalRank: number;
+}
+
 const currentPage = ref(1)
 const pageSize = ref(12) // Número de jugadores por página
 
-// Estado para el término de búsqueda
 const searchTerm = ref('')
-
-// Estado para controlar la ordenación
-const sortBy = ref<keyof PlayerModel['Stats'] | 'Nickname'>('Elo') // columna por defecto
+const sortBy = ref<keyof PlayerModel['Stats'] | 'Nickname'>('Elo')
 const sortOrder = ref<'asc' | 'desc'>('desc') // orden por defecto
 
-// Computed property para filtrar y ordenar los jugadores
-const filteredPlayers = computed(() => {
-	let sortedPlayers = [...props.players]
+const filteredPlayers = ref<PlayerWithRank[]>([]);
 
-	// Filtrar por nombre de usuario
-	if (searchTerm.value) {
-		sortedPlayers = sortedPlayers.filter(player =>
-			player.Nickname?.toLowerCase().includes(searchTerm.value.toLowerCase())
-		)
-	}
+// Usar `watchEffect` para actualizar jugadores filtrados cuando props.players o los términos cambien
+watchEffect(() => {
+  if (props.players.length) {
+    filteredPlayers.value = filterPlayers(props.players, searchTerm, sortBy, sortOrder).value;
+  }
+});
 
-	// Ordenar por la columna seleccionada
-	sortedPlayers.sort((a, b) => {
-		let valA, valB
-		if (sortBy.value === 'Nickname') {
-			valA = a.Nickname.toLowerCase()
-			valB = b.Nickname.toLowerCase()
-		} else {
-			valA = a.Stats[sortBy.value] || 0
-			valB = b.Stats[sortBy.value] || 0
-		}
-
-		if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1
-		if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1
-		return 0
-	})
-
-	return sortedPlayers
-})
-
-// Cálculo del número total de páginas basado en los jugadores filtrados
 const totalPages = computed(() => Math.ceil(filteredPlayers.value.length / pageSize.value) || 1)
 
-// Filtrar los jugadores que deben mostrarse en la página actual
-const paginatedPlayers = computed(() => {
-	const start = (currentPage.value - 1) * pageSize.value
-	const end = start + pageSize.value
-	return filteredPlayers.value.slice(start, end)
-})
+const paginatedPlayers = computed<PlayerWithRank[]>(() => {
+  const start = (currentPage.value - 1) * pageSize.value;
+  const end = start + pageSize.value;
+  return filteredPlayers.value.slice(start, end);
+});
 
-// Funciones para cambiar de página
 const nextPage = () => {
 	if (currentPage.value < totalPages.value) currentPage.value++
 }
@@ -78,7 +55,6 @@ const prevPage = () => {
 	if (currentPage.value > 1) currentPage.value--
 }
 
-// Función para cambiar la columna de ordenación
 const changeSort = (column: keyof PlayerModel['Stats'] | 'Nickname') => {
 	if (sortBy.value === column) {
 		// Cambiar el orden (ascendente/descendente) si se vuelve a hacer clic en la misma columna
@@ -90,26 +66,10 @@ const changeSort = (column: keyof PlayerModel['Stats'] | 'Nickname') => {
 	}
 }
 
-// Watcher para resetear la página actual cuando cambia el término de búsqueda
 watch(searchTerm, () => {
 	currentPage.value = 1
 })
 
-// Función para calcular percentiles
-function calculatePercentiles(values: number[], percentile: number): number {
-	if (values.length === 0) return NaN;  // Devuelve NaN si la lista está vacía
-	values.sort((a, b) => a - b);  // Ordena los valores numéricos
-	const index = (percentile / 100) * (values.length - 1);
-	const lower = Math.floor(index);
-	const upper = Math.ceil(index);
-	const weight = index - lower;
-
-	if (upper >= values.length) return values[lower]; // Si el índice está en el límite superior
-	const res = values[lower] * (1 - weight) + values[upper] * weight;  // Interpolación
-	return res
-}
-
-// Variables reactivas para percentiles
 const percentiles = ref<Record<string, { p10: number, p95: number }>>({
 	Elo: { p10: NaN, p95: NaN },
 	KrRatio: { p10: NaN, p95: NaN },
@@ -120,7 +80,6 @@ const percentiles = ref<Record<string, { p10: number, p95: number }>>({
 	MVPAverage: { p10: NaN, p95: NaN },
 });
 
-// Calcular percentiles en el hook onMounted
 watch(
 	() => props.players,
 	(newPlayers) => {
@@ -152,70 +111,6 @@ watch(
 	{ immediate: true }
 );
 
-const levels = ['text-green-700' ,'text-green-600', 'text-green-500', 'text-green-300', 'text-yellow-500', 'text-yellow-500', 'text-red-400', 'text-red-500', 'text-red-600']
-
-// Función para obtener color basada en percentiles
-function getColor(stat: number, p10: number, p95: number, isInverse: boolean = false) {
-	if (isNaN(p10) || isNaN(p95)) {
-		console.error('Error: p10 o p95 es NaN', { stat, p10, p95 });
-		return 'text-gray-500';  // Color predeterminado en caso de error
-	}
-
-	const range = p95 - p10;
-	const step = range / 8;
-
-	// Si es inverso, intercambiamos el comportamiento de los colores
-	if (isInverse) {
-		if (stat <= p10) {
-			return levels[0];
-		} else if (stat >= p95) {
-			return levels[8];
-		} else {
-			if (stat < p10 + step) {
-				return levels[1];
-			} else if (stat < p10 + step * 2) {
-				return levels[2];
-			} else if (stat < p10 + step * 3) {
-				return levels[3];
-			} else if (stat < p10 + step * 4) {
-				return levels[4];
-			} else if (stat < p10 + step * 5) {
-				return levels[5];
-			} else if (stat < p10 + step * 6) {
-				return levels[6];
-			} else if (stat < p10 + step * 7) {
-				return levels[7];
-			} else {
-				return levels[8];
-			}
-		}
-	} else {
-		// Comportamiento normal
-		if (stat <= p10) {
-			return levels[8];
-		} else if (stat >= p95) {
-			return levels[1];
-		} else {
-			if (stat < p10 + step) {
-				return levels[7];
-			} else if (stat < p10 + step * 2) {
-				return levels[6];
-			} else if (stat < p10 + step * 3) {
-				return levels[5];
-			} else if (stat < p10 + step * 4) {
-				return levels[4];
-			} else if (stat < p10 + step * 5) {
-				return levels[3];
-			} else if (stat < p10 + step * 6) {
-				return levels[2];
-			} else if (stat < p10 + step * 7) {
-				return levels[1];
-			} else {
-				return levels[0];
-			}
-		}
-	}
-}
 </script>
 
 <template>
@@ -234,6 +129,12 @@ function getColor(stat: number, p10: number, p95: number, isInverse: boolean = f
 			<!-- Cabecera de la tabla -->
 			<TableHeader>
 				<TableRow class="w-full">
+					<TableHead class="">
+						<div class="flex items-center gap-1">
+							
+						</div>
+					</TableHead>
+
 					<!-- Ordenar por Elo -->
 					<TableHead class="cursor-pointer" @click="changeSort('Elo')">
 						<div class="flex items-center gap-1">
@@ -243,14 +144,14 @@ function getColor(stat: number, p10: number, p95: number, isInverse: boolean = f
 					</TableHead>
 
 					<!-- Header Avatar -->
-					<TableHead class="cursor-pointer w-10">
+					<TableHead class="w-10">
 						<div class="flex items-center gap-1 justify-center">
 							
 						</div>
 					</TableHead>
 
 					<!-- Header Nickname -->
-					<TableHead class="cursor-pointer">
+					<TableHead class="">
 						<div class="flex items-center gap-1 justify-left">
 							Nickname
 						</div>
@@ -308,7 +209,10 @@ function getColor(stat: number, p10: number, p95: number, isInverse: boolean = f
 
 			<!-- Cuerpo de la tabla -->
 			<TableBody>
-				<TableRow v-for="player in paginatedPlayers" :key="player.Id">
+				<TableRow v-for="(player, n) in paginatedPlayers" :key="player.Id">
+					<TableCell class="text-left w-8 font-semibold text-slate-500">
+						{{ player.GlobalRank }}º
+					</TableCell>
 					<TableCell class="text-left"><Badge variant="secondary">{{ player.Stats.Elo }}</Badge></TableCell>
 					<TableCell class="text-right">
 						<a :href="`https://www.faceit.com/es/players/${player.Nickname}`" target="_blank" rel="noopener noreferrer">
@@ -348,7 +252,7 @@ function getColor(stat: number, p10: number, p95: number, isInverse: boolean = f
 				<!-- Mostrar un mensaje si no hay jugadores -->
 
 				<TableRow v-if="props.players.length == 0">
-					<TableCell colspan="9" class="text-center text-slate-400 py-6">
+					<TableCell colspan="10" class="text-center text-slate-400 py-6">
 						<div class="flex flex-col gap-2 justify-center items-center">
 							<Spinner />
 							<span class="mt-2">Cargando jugadores...</span>
@@ -357,11 +261,8 @@ function getColor(stat: number, p10: number, p95: number, isInverse: boolean = f
 				</TableRow>
 
 				<TableRow v-if="paginatedPlayers.length === 0 && props.players.length > 0">
-					<TableCell colspan="9" class="text-center text-slate-400 py-6">
-						<div class="flex justify-center items-center">
-							<div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-slate-400"></div>
-						</div>
-						No se encontraron jugadores
+					<TableCell colspan="10" class="text-center text-slate-400 py-6">
+						<span class="mt-2">No se encontraron jugadores 😢</span>
 					</TableCell>
 				</TableRow>
 			</TableBody>

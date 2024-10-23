@@ -56,6 +56,12 @@ onMounted(async () => {
                                 </Button>
                             </div>
                         </NavigationMenuItem>
+                        <!-- <NavigationMenuItem class="ml-4">
+                            <Button variant="outline" class="border flex gap-2 dark:bg-gradient-to-b dark:from-slate-800 bg-gradient-to-t from-slate-200">
+                                <Icon icon="simple-icons:faceit" class="h-[1rem] w-[1rem] scale-100 transition-all text-orange-600" />
+                                <span>Entrar con Faceit</span>
+                            </Button>
+                        </NavigationMenuItem> -->
                     </div>
                 </NavigationMenuList>
             </NavigationMenu>
