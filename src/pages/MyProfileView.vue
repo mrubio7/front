@@ -13,5 +13,5 @@ const urlParams = new URLSearchParams(window.location.search);
 </script>
 
 <template>
-    
+    MY PROFILE VIEW
 </template>
