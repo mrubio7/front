@@ -5,12 +5,16 @@ import Layout from './pages/Layout.vue'
 import LadderPlayersView from './pages/LadderPlayersView.vue'
 import LadderTeamsView from './pages/LadderTeamsView.vue'
 import TeamProfileView from './pages/TeamProfileView.vue'
+import MyProfileView from './pages/MyProfileView.vue'
+import FaceitCallback from './pages/FaceitCallback.vue'
 
 export const PathRoutes = {
 	Home: "/",
 	Ladder_Players: "/ladder/players",
 	Ladder_Equipos: "/ladder/teams",
-	Team_Profile: "/team/:team_name"
+	Team_Profile: "/team/:team_name",
+	MyProfile: "/my-profile",
+	AuthCallback: "/auth/callback"
 }
 
 const routes = [
@@ -18,7 +22,9 @@ const routes = [
 		{ path: "", component: HomeView },
 		{ path: PathRoutes.Ladder_Players, component: LadderPlayersView },
 		{ path: PathRoutes.Ladder_Equipos, component: LadderTeamsView },
-		{ path: PathRoutes.Team_Profile, component: TeamProfileView }
+		{ path: PathRoutes.Team_Profile, component: TeamProfileView },
+		{ path: PathRoutes.MyProfile, component: MyProfileView },
+		{ path: PathRoutes.AuthCallback, component: FaceitCallback}
 	]},
 ]
 
