@@ -51,7 +51,7 @@ const loginWithFaceit = async () => {
   <div v-else class="-mt-0.5">
     <div class="flex items-center gap-4 p-1">
       <span class="text-sm font-semibold text-slate-500 text-right">
-        {{ UserState.Name }} --xt
+        {{ UserState.Name }}
       </span>
       <Avatar class="w-7 h-7 border border-slate-500">
         <AvatarImage v-if="UserState.Player.Avatar !== ''" :src="UserState.Player.Avatar" alt="Avatar"  />
