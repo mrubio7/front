@@ -11,18 +11,20 @@ import { ProminentPlayer } from '@/entities/players';
 import LoginFaceit from '@/components/ibercs/user/LoginFaceit.vue';
 import { IsAlreadyLogged, UserState } from '@/components/ibercs/user/state';
 import { Logout } from '@/libs/utils';
+import { UserModel } from '@/entities/users';
 
 const mode = useColorMode()
 
 const prominentPlayers = ref([] as ProminentPlayer[]);
+const userState = ref({} as UserModel)
 
 onMounted(async () => {
     IsAlreadyLogged()
     prominentPlayers.value = await ApiBackend.Players.GetProminentPlayers();
 });
 
-watch(() => UserState.ID, () => {
-  console.log("Layout Userloaded", UserState)
+watch(() => UserState, () => {
+    userState.value = UserState
 })
 </script>
 
@@ -72,7 +74,7 @@ watch(() => UserState.ID, () => {
             </div>
             <NavigationMenu class="w-2/12 px-6 pt-2 pb-2">
                 <NavigationMenuList class="flex justify-end items-center space-x-4">
-                    <div v-if="UserState.Name !== ''">
+                    <div v-if="userState.ID !== undefined">
                         <NavigationMenuItem class="">
                             <NavigationMenuTrigger>
                                 <LoginFaceit />
