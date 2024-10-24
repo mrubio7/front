@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import Spinner from '@/components/ui/spinner/Spinner.vue';
 import { Icon } from '@iconify/vue/dist/iconify.js';
 import ApiLocalStorage from '@/api/api_localstorage';
