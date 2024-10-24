@@ -35,3 +35,11 @@ export const ClearState = () => {
     UserState.Twitter = ""
     UserState.Player = {} as PlayerModel
 }
+
+export const IsAlreadyLogged = () => {
+    const user = localStorage.getItem("user") as (UserModel | null)
+    if (user == null) {
+        return null
+    }
+    SetUserState(user)
+}

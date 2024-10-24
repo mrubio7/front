@@ -9,7 +9,7 @@ import { ApiBackend } from '@/api/api_backend';
 import { onMounted, ref } from 'vue';
 import { ProminentPlayer } from '@/entities/players';
 import LoginFaceit from '@/components/ibercs/user/LoginFaceit.vue';
-import { UserState } from '@/components/ibercs/user/state';
+import { IsAlreadyLogged, UserState } from '@/components/ibercs/user/state';
 import { Logout } from '@/libs/utils';
 
 const mode = useColorMode()
@@ -17,6 +17,7 @@ const mode = useColorMode()
 const prominentPlayers = ref([] as ProminentPlayer[]);
 
 onMounted(async () => {
+    IsAlreadyLogged()
     prominentPlayers.value = await ApiBackend.Players.GetProminentPlayers();
 });
 </script>

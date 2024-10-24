@@ -38,7 +38,6 @@ export async function generateCodeChallenge(codeVerifier: string): Promise<strin
 }
 
 export const Logout = async (code:string) => {
-  console.log("SALIIIIRRR")
   const res = await ApiBackend.Users.Logout(code)
   if (res) {
     ClearUserState()
