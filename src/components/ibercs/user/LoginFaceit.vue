@@ -3,6 +3,8 @@ import Button from '@/components/ui/button/Button.vue';
 import { generateCodeChallenge, generateCodeVerifier } from '@/libs/utils';
 import { Icon } from '@iconify/vue/dist/iconify.js';
 import { ref } from 'vue';
+import { UserState } from './state';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 const clientId = import.meta.env.VITE_OAUTH2_FACEIT_ID;
 const redirectUri = 'https://pre.ibercs.com/auth/callback';
@@ -33,10 +35,21 @@ const loginWithFaceit = async () => {
 </script>
 
 <template>
-  <div>
+  <div v-if="!UserState.Name">
       <Button variant="outline" @click="loginWithFaceit" class="border flex gap-2 dark:bg-gradient-to-b dark:from-slate-900 bg-gradient-to-t from-slate-100">
         <Icon icon="simple-icons:faceit" class="h-[1rem] w-[1rem] scale-100 transition-all text-orange-600" />
         <span>Entrar con Faceit</span>
       </Button>
+  </div>
+  <div v-else class="-mt-0.5">
+    <div class="flex items-center gap-4 p-1">
+      <span class="text-sm font-semibold text-slate-500 text-right">
+        {{ UserState.Name }} --xt
+      </span>
+      <Avatar class="w-7 h-7 border border-slate-500">
+        <AvatarImage v-if="UserState.Player.Avatar !== ''" :src="UserState.Player.Avatar" alt="Avatar"  />
+        <AvatarImage v-else src="https://github.com/radix-vue.png" alt="Avatar"  />
+      </Avatar>
+    </div>
   </div>
 </template>

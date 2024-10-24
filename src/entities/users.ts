@@ -8,5 +8,6 @@ export interface UserModel {
 	Twitter:string
 	Twitch:string
 	Role:number
+	Token:string
 	Player:PlayerModel
 }

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import axios from 'axios';
 import { onMounted } from 'vue';
 import Spinner from '@/components/ui/spinner/Spinner.vue';
 import { Icon } from '@iconify/vue/dist/iconify.js';
-import ApiLocalStorage from '@/api/api_localstorage';
+import { ApiBackend } from '@/api/api_backend';
+import { SetUserState } from '@/components/ibercs/user/state';
 
 document.title = "IBERCS - Inicio de sesión"
 
@@ -12,29 +12,8 @@ onMounted(async () => {
   const code = urlParams.get('code');
 
   if (code) {
-    try {
-      const codeVerifier = localStorage.getItem('faceit_code_verifier');
-
-      if (!codeVerifier) {
-        console.error('No se encontró el code_verifier');
-        return;
-      }
-
-      const response = await axios.post(
-        'https://api-gateway-1047491143983.europe-southwest1.run.app/api/v1/auth/callback',
-        { code, code_verifier: codeVerifier },
-        { withCredentials: true }
-      );
-
-      ApiLocalStorage.Save("user", response.data)
-      localStorage.removeItem('faceit_code_verifier');
-
-      window.close()
-    } catch (error) {
-      console.error('Error al autenticar al usuario:', error);
-    }
-  } else {
-    console.error('No se recibió ningún código de autorización.');
+    const user = await ApiBackend.Users.AuthCallback(code)
+    SetUserState(user)
   }
 });
 </script>

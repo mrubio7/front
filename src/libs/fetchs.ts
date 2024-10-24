@@ -47,6 +47,7 @@ export const basic_post = (url: string, params: PostParams) => {
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(params),
     })
     .then((response) => {

@@ -1,6 +1,7 @@
 import { PlayerModel, ProminentPlayer } from "@/entities/players"
 import { TeamsModel } from "@/entities/teams"
-import { basic_get } from "@/libs/fetchs"
+import { UserModel } from "@/entities/users"
+import { basic_get, basic_post } from "@/libs/fetchs"
 
 const getHost = (): string => {
     let host = import.meta.env.VITE_BACKEND_HOST
@@ -9,6 +10,20 @@ const getHost = (): string => {
 
 
 export const ApiBackend = {
+    Users: {
+        AuthCallback: async (code: string) => {
+            const codeVerifier = localStorage.getItem('faceit_code_verifier');
+            const endpoint = `${getHost()}/auth/callback`;
+            const res = await basic_post(endpoint, { code, code_verifier: codeVerifier })
+            localStorage.removeItem('faceit_code_verifier');
+            return res.data as UserModel
+        },
+        Logout: async (code: string) => {
+            const endpoint = `${getHost()}/auth/logout`;
+            const res = await basic_post(endpoint, { code: code })
+            return res.data as boolean
+        }
+    },
     Players: {
         GetAll: async () => {
             const endpoint = `${getHost()}/players/get-all`;

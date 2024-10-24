@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu'
+import { NavigationMenu, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger, NavigationMenuLink, NavigationMenuContent, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu'
 import { Button } from '@/components/ui/button';
 import { useColorMode } from '@vueuse/core'
 import { Icon } from '@iconify/vue'
@@ -9,6 +9,8 @@ import { ApiBackend } from '@/api/api_backend';
 import { onMounted, ref } from 'vue';
 import { ProminentPlayer } from '@/entities/players';
 import LoginFaceit from '@/components/ibercs/user/LoginFaceit.vue';
+import { UserState } from '@/components/ibercs/user/state';
+import { Logout } from '@/libs/utils';
 
 const mode = useColorMode()
 
@@ -22,30 +24,32 @@ onMounted(async () => {
 <template>
     <section class="flex flex-col min-h-screen w-full">
         <!-- Barra de navegación -->
-        <div>
-            <NavigationMenu class="w-full max-w-none px-6 pt-2 pb-1 border-b">
-                <NavigationMenuList>
-                    <div class="flex justify-between">
-                        <div class="flex items-center gap-4">
-                            <RouterLink :to="PathRoutes.Home">
-                                <NavigationMenuItem :class="navigationMenuTriggerStyle()" class="cursor-pointer">
+        <div class="flex w-full justify-between border-b">
+            <div class="flex w-10/12">
+                <NavigationMenu class="min-w-full px-6 pt-2 pb-1">
+                    <NavigationMenuList class="flex min-w-full justify-between items-center space-x-4">
+                        <div class="flex items-center">
+                            <NavigationMenuItem>
+                                <NavigationMenuLink :href="PathRoutes.Home" :class="navigationMenuTriggerStyle()">
                                     <div>
-                                        <img src="/logo.png" width="30"/>
-                                    </div>
-                                </NavigationMenuItem>
-                            </RouterLink>
-                            <RouterLink :to="PathRoutes.Ladder_Players">
-                                <NavigationMenuItem :class="navigationMenuTriggerStyle()" class="cursor-pointer">
+                                    <img src="/logo.png" width="30"/>
+                                </div>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem>
+                                <NavigationMenuLink :href="PathRoutes.Ladder_Players" :class="navigationMenuTriggerStyle()">
                                     Jugadores
-                                </NavigationMenuItem>
-                            </RouterLink>
-                            <RouterLink :to="PathRoutes.Ladder_Equipos">
-                                <NavigationMenuItem :class="navigationMenuTriggerStyle()" class="cursor-pointer">
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem>
+                                <NavigationMenuLink :href="PathRoutes.Ladder_Players" :class="navigationMenuTriggerStyle()">
                                     Equipos
-                                </NavigationMenuItem>
-                            </RouterLink>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
                         </div>
-                        <NavigationMenuItem>
+                    
+                        
+                        <NavigationMenuItem class="">
                             <div v-if="mode == 'light'">
                                 <Button variant="outline" size="icon" @click="mode = 'dark'">
                                     <Icon icon="radix-icons:moon" class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -57,7 +61,27 @@ onMounted(async () => {
                                 </Button>
                             </div>
                         </NavigationMenuItem>
-                        <NavigationMenuItem class="ml-4">
+                        
+                    </NavigationMenuList>
+                </NavigationMenu>
+            </div>
+            <NavigationMenu class="w-2/12 px-6 pt-2 pb-2">
+                <NavigationMenuList class="flex justify-end items-center space-x-4">
+                    <div v-if="UserState.Name !== ''">
+                        <NavigationMenuItem class="">
+                            <NavigationMenuTrigger>
+                                <LoginFaceit />
+                            </NavigationMenuTrigger>
+                            <NavigationMenuContent class="">
+                                <div class="p-1 pr-2 pb-2">
+                                    <NavigationMenuLink href="/my-profile" class="block p-2 text-sm dark:text-slate-400 hover:dark:bg-slate-800 rounded transition">Mi perfil</NavigationMenuLink>
+                                    <NavigationMenuLink @click="Logout" class="block p-2 text-sm dark:text-slate-400 hover:dark:bg-slate-800 rounded transition">Desconectar</NavigationMenuLink>
+                                </div>
+                            </NavigationMenuContent>
+                        </NavigationMenuItem>
+                    </div>
+                    <div v-else>
+                        <NavigationMenuItem>
                             <LoginFaceit />
                         </NavigationMenuItem>
                     </div>

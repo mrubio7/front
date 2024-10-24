@@ -1,6 +1,9 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { LEAGUES } from './consts';
+import { ApiBackend } from '@/api/api_backend';
+import ApiLocalStorage from '@/api/api_localstorage';
+import { ClearState as ClearUserState, UserState } from '@/components/ibercs/user/state';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -33,4 +36,12 @@ export async function generateCodeChallenge(codeVerifier: string): Promise<strin
     .replace(/\//g, '_')
     .replace(/=+$/, '');
   return base64Digest;
+}
+
+export const Logout = async (code:string) => {
+  console.log("SALIIIIRRR")
+  const res = await ApiBackend.Users.Logout(code)
+  if (res) {
+    ClearUserState()
+  }
 }
