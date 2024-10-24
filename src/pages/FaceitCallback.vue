@@ -14,6 +14,7 @@ onMounted(async () => {
   if (code) {
     const user = await ApiBackend.Users.AuthCallback(code)
     SetUserState(user)
+    window.close();
   }
 });
 </script>
