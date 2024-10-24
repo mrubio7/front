@@ -6,25 +6,23 @@ import { Icon } from '@iconify/vue'
 import { PathRoutes } from '@/router';
 import Prominent_players from '@/components/ibercs/cards/prominent_players.vue';
 import { ApiBackend } from '@/api/api_backend';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 import { ProminentPlayer } from '@/entities/players';
 import LoginFaceit from '@/components/ibercs/user/LoginFaceit.vue';
 import { IsAlreadyLogged, UserState } from '@/components/ibercs/user/state';
 import { Logout } from '@/libs/utils';
-import { UserModel } from '@/entities/users';
 
 const mode = useColorMode()
 
 const prominentPlayers = ref([] as ProminentPlayer[]);
-const userState = ref({} as UserModel)
 
 onMounted(async () => {
     IsAlreadyLogged()
     prominentPlayers.value = await ApiBackend.Players.GetProminentPlayers();
 });
 
-watch(() => UserState, () => {
-    userState.value = UserState
+watchEffect(() => {
+    console.log("Layout: ", UserState.Name)
 })
 </script>
 
@@ -74,7 +72,7 @@ watch(() => UserState, () => {
             </div>
             <NavigationMenu class="w-2/12 px-6 pt-2 pb-2">
                 <NavigationMenuList class="flex justify-end items-center space-x-4">
-                    <div v-if="userState.ID !== undefined">
+                    <div v-if="UserState?.Name !== ''">
                         <NavigationMenuItem class="">
                             <NavigationMenuTrigger>
                                 <LoginFaceit />

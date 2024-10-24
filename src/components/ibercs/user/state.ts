@@ -41,5 +41,7 @@ export const ClearState = () => {
 
 export const IsAlreadyLogged = () => {
     const user = ApiLocalStorage.User.Get()
-    SetUserState(user)
+    if (user !== undefined) {
+        SetUserState(user)
+    }
 }

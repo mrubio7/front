@@ -1,7 +1,6 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { LEAGUES } from './consts';
-import { ApiBackend } from '@/api/api_backend';
 import { ClearState as ClearUserState } from '@/components/ibercs/user/state';
 
 export function cn(...inputs: ClassValue[]) {
@@ -38,8 +37,8 @@ export async function generateCodeChallenge(codeVerifier: string): Promise<strin
 }
 
 export const Logout = async (code:string) => {
-  const res = await ApiBackend.Users.Logout(code)
-  if (res) {
-    ClearUserState()
-  }
+  ClearUserState()
+  // const res = await ApiBackend.Users.Logout(code)
+  // if (res) {
+  // }
 }

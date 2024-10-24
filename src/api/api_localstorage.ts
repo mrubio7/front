@@ -14,6 +14,7 @@ const ApiLocalStorage = {
     },
     User: {
         Save: (user:UserModel) => {
+            debugger
             const data = btoa(JSON.stringify(user))
             localStorage.setItem("usermetadata", data)
         },
