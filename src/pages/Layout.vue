@@ -25,15 +25,15 @@ onMounted(async () => {
     <section class="flex flex-col min-h-screen w-full">
         <!-- Barra de navegación -->
         <div class="flex w-full justify-between border-b">
-            <div class="flex w-10/12">
+            <div class="flex w-full">
                 <NavigationMenu class="min-w-full px-6 pt-2 pb-1">
                     <NavigationMenuList class="flex min-w-full justify-between items-center space-x-4">
                         <div class="flex items-center">
                             <NavigationMenuItem>
                                 <NavigationMenuLink :href="PathRoutes.Home" :class="navigationMenuTriggerStyle()">
                                     <div>
-                                    <img src="/logo.png" width="30"/>
-                                </div>
+                                        <img src="/logo.png" width="30"/>
+                                    </div>
                                 </NavigationMenuLink>
                             </NavigationMenuItem>
                             <NavigationMenuItem>
@@ -49,7 +49,7 @@ onMounted(async () => {
                         </div>
                     
                         
-                        <NavigationMenuItem class="">
+                        <NavigationMenuItem>
                             <div v-if="mode == 'light'">
                                 <Button variant="outline" size="icon" @click="mode = 'dark'">
                                     <Icon icon="radix-icons:moon" class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />

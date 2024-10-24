@@ -36,10 +36,17 @@ const loginWithFaceit = async () => {
 
 <template>
   <div v-if="!UserState.Name">
+    <div class="lg:flex hidden">
       <Button variant="outline" @click="loginWithFaceit" class="border flex gap-2 dark:bg-gradient-to-b dark:from-slate-900 bg-gradient-to-t from-slate-100">
         <Icon icon="simple-icons:faceit" class="h-[1rem] w-[1rem] scale-100 transition-all text-orange-600" />
         <span>Entrar con Faceit</span>
       </Button>
+    </div>
+    <div class="lg:hidden flex">
+      <Button variant="outline" @click="loginWithFaceit" class="border flex gap-2 dark:bg-gradient-to-b dark:from-slate-900 bg-gradient-to-t from-slate-100">
+        <Icon icon="simple-icons:faceit" class="h-[1rem] w-[1rem] scale-100 transition-all text-orange-600" />
+      </Button>
+    </div>
   </div>
   <div v-else class="-mt-0.5">
     <div class="flex items-center gap-4 p-1">
