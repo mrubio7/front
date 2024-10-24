@@ -30,7 +30,14 @@ const loginWithFaceit = async () => {
   const height = 600;
   const left = (window.screen.width / 2) - (width / 2);
   const top = (window.screen.height / 2) - (height / 2);
-  window.open(`https://accounts.faceit.com?${params.toString()}&redirect_popup=true`, "_blank", `width=${width},height=${height},left=${left},top=${top}`);
+  const popup = window.open(`https://accounts.faceit.com?${params.toString()}&redirect_popup=true`, "_blank", `width=${width},height=${height},left=${left},top=${top}`);
+
+  const popupCheckInterval = setInterval(() => {
+    if (popup!.closed) {
+      clearInterval(popupCheckInterval);
+      window.location.reload();
+    }
+  }, 500); // Intervalo de chequeo cada 500ms
 };
 
 onMounted(() => {
