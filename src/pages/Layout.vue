@@ -79,8 +79,8 @@ watchEffect(() => {
                             </NavigationMenuTrigger>
                             <NavigationMenuContent class="">
                                 <div class="p-1 pr-2 pb-2">
-                                    <NavigationMenuLink href="/my-profile" class="block p-2 text-sm dark:text-slate-400 hover:dark:bg-slate-800 rounded transition">Mi perfil</NavigationMenuLink>
-                                    <NavigationMenuLink @click="Logout" class="block p-2 text-sm dark:text-slate-400 hover:dark:bg-slate-800 rounded transition">Desconectar</NavigationMenuLink>
+                                    <NavigationMenuLink href="/my-profile" class="block p-2 text-sm dark:text-slate-400 hover:dark:bg-slate-800 rounded transition cursor-pointer">Mi perfil</NavigationMenuLink>
+                                    <NavigationMenuLink @click="Logout" class="block p-2 text-sm dark:text-slate-400 hover:dark:bg-slate-800 rounded transition cursor-pointer">Desconectar</NavigationMenuLink>
                                 </div>
                             </NavigationMenuContent>
                         </NavigationMenuItem>
