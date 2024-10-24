@@ -17,7 +17,7 @@ export const ApiBackend = {
             const res = await basic_post(endpoint, { "code": code, "code_verifier": codeVerifier })
             localStorage.removeItem('faceit_code_verifier');
             console.log(res)
-            return res as UserModel
+            return res.data as UserModel
         },
         Logout: async (code: string) => {
             const endpoint = `${getHost()}/auth/logout`;
