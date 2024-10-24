@@ -13,7 +13,7 @@ export const ApiBackend = {
     Users: {
         AuthCallback: async (code: string) => {
             const codeVerifier = localStorage.getItem('faceit_code_verifier');
-            const endpoint = `http://localhost:8080/api/v1/auth/callback`;
+            const endpoint = `${getHost()}/auth/callback`;
             const res = await basic_post(endpoint, { "code": code, "code_verifier": codeVerifier })
             localStorage.removeItem('faceit_code_verifier');
             console.log(res)
