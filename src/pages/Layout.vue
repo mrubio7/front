@@ -42,7 +42,7 @@ onMounted(async () => {
                                 </NavigationMenuLink>
                             </NavigationMenuItem>
                             <NavigationMenuItem>
-                                <NavigationMenuLink :href="PathRoutes.Ladder_Players" :class="navigationMenuTriggerStyle()">
+                                <NavigationMenuLink :href="PathRoutes.Ladder_Equipos" :class="navigationMenuTriggerStyle()">
                                     Equipos
                                 </NavigationMenuLink>
                             </NavigationMenuItem>
