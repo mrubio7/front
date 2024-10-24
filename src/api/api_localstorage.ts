@@ -1,3 +1,5 @@
+import { UserModel } from "@/entities/users"
+
 const ApiLocalStorage = {
     Token: {
         Save: (value:any) => {
@@ -8,6 +10,22 @@ const ApiLocalStorage = {
             if (data != null)
                 return JSON.parse(data)
             return null
+        }
+    },
+    User: {
+        Save: (user:UserModel) => {
+            const data = btoa(JSON.stringify(user))
+            localStorage.setItem("usermetadata", data)
+        },
+        Get: () => {
+            const b = localStorage.getItem("usermetadata")
+            if (b != null) {
+                const data = atob(b)
+                return JSON.parse(data)
+            }
+        },
+        Remove: () => {
+            localStorage.removeItem("usermetadata")
         }
     },
     Save: (key:string, value:any) => {

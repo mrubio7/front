@@ -1,3 +1,4 @@
+import ApiLocalStorage from "@/api/api_localstorage";
 import { PlayerModel } from "@/entities/players";
 import { UserModel } from "@/entities/users";
 import { reactive } from "vue";
@@ -15,6 +16,7 @@ export const UserState = reactive<UserModel>({
 })
 
 export const SetUserState = (user:UserModel) => {
+    ApiLocalStorage.User.Save(user)
     UserState.Description = user.Description
     UserState.FaceitID = user.FaceitID
     UserState.ID = user.ID
@@ -26,6 +28,7 @@ export const SetUserState = (user:UserModel) => {
 }
 
 export const ClearState = () => {
+    ApiLocalStorage.User.Remove()
     UserState.Description = ""
     UserState.FaceitID = ""
     UserState.ID = 0
@@ -37,9 +40,6 @@ export const ClearState = () => {
 }
 
 export const IsAlreadyLogged = () => {
-    const user = localStorage.getItem("user") as (UserModel | null)
-    if (user == null) {
-        return null
-    }
+    const user = ApiLocalStorage.User.Get()
     SetUserState(user)
 }
