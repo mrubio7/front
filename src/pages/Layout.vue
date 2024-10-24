@@ -6,7 +6,7 @@ import { Icon } from '@iconify/vue'
 import { PathRoutes } from '@/router';
 import Prominent_players from '@/components/ibercs/cards/prominent_players.vue';
 import { ApiBackend } from '@/api/api_backend';
-import { onMounted, ref, watchEffect } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { ProminentPlayer } from '@/entities/players';
 import LoginFaceit from '@/components/ibercs/user/LoginFaceit.vue';
 import { IsAlreadyLogged, UserState } from '@/components/ibercs/user/state';
@@ -21,9 +21,9 @@ onMounted(async () => {
     prominentPlayers.value = await ApiBackend.Players.GetProminentPlayers();
 });
 
-watchEffect(() => {
-  console.log('UserState changed:', UserState.Name);
-});
+watch(() => UserState.ID, () => {
+  console.log("Layout Userloaded", UserState)
+})
 </script>
 
 <template>

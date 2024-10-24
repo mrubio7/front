@@ -4,7 +4,7 @@ import { UserModel } from "@/entities/users";
 import { reactive } from "vue";
 
 export const UserState = reactive<UserModel>({
-    ID:0,
+    ID:undefined,
     Role:0,
     FaceitID:"",
     Name:"",
@@ -29,9 +29,9 @@ export const SetUserState = (user:UserModel) => {
 
 export const ClearState = () => {
     ApiLocalStorage.User.Remove()
+    UserState.ID = undefined
     UserState.Description = ""
     UserState.FaceitID = ""
-    UserState.ID = 0
     UserState.Name = ""
     UserState.Role = 0
     UserState.Twitch = ""

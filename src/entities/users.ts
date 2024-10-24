@@ -1,7 +1,7 @@
 import { PlayerModel } from "./players"
 
 export interface UserModel {
-    ID:number
+    ID:number|undefined
 	FaceitID:string
 	Name:string
 	Description:string

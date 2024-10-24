@@ -2,7 +2,7 @@
 import Button from '@/components/ui/button/Button.vue';
 import { generateCodeChallenge, generateCodeVerifier } from '@/libs/utils';
 import { Icon } from '@iconify/vue/dist/iconify.js';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { UserState } from './state';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
@@ -32,6 +32,10 @@ const loginWithFaceit = async () => {
   const top = (window.screen.height / 2) - (height / 2);
   window.open(`https://accounts.faceit.com?${params.toString()}&redirect_popup=true`, "_blank", `width=${width},height=${height},left=${left},top=${top}`);
 };
+
+watch(() => UserState.ID, () => {
+  console.log("Userloaded", UserState)
+})
 </script>
 
 <template>
