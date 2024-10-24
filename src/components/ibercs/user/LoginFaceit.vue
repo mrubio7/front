@@ -5,7 +5,7 @@ import { Icon } from '@iconify/vue/dist/iconify.js';
 import { ref } from 'vue';
 
 const clientId = import.meta.env.VITE_OAUTH2_FACEIT_ID;
-const redirectUri = 'https://www.ibercs.com/auth/callback';
+const redirectUri = 'https://pre.ibercs.com/auth/callback';
 const codeVerifier = ref('');
     
 const loginWithFaceit = async () => {
@@ -38,9 +38,5 @@ const loginWithFaceit = async () => {
         <Icon icon="simple-icons:faceit" class="h-[1rem] w-[1rem] scale-100 transition-all text-orange-600" />
         <span>Entrar con Faceit</span>
       </Button>
-
-      <!-- <div v-else>
-        <img :src="userAvatar" alt="Avatar del usuario" class="rounded-full w-12 h-12" />
-      </div> -->
   </div>
 </template>

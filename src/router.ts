@@ -24,8 +24,8 @@ const routes = [
 		{ path: PathRoutes.Ladder_Equipos, component: LadderTeamsView },
 		{ path: PathRoutes.Team_Profile, component: TeamProfileView },
 		{ path: PathRoutes.MyProfile, component: MyProfileView },
-		{ path: PathRoutes.AuthCallback, component: FaceitCallback}
 	]},
+	{ path: PathRoutes.AuthCallback, component: FaceitCallback}
 ]
 
 const router = createRouter({
